@@ -11,14 +11,46 @@ namespace ProjectSkelAnimator
         public int SelectedIndex = 0;
         public int Ticks = 4;
         public int CurrentTick = 0;
+        Cursor cursor;
 
-        public Frame(Part[] parts)
+        public Frame()
         {
-            Parts = parts;
-            //Parts = new Part[0];
+            //this.cursor = cursor;
+            //Parts = parts;
+            Parts = new Part[0];
+        }
+
+        public Frame(Frame originalFrame)
+        {
+            //this.cursor = cursor;
+            Parts = new Part[originalFrame.Parts.Length];
+            for (int i = 0; i < originalFrame.Parts.Length; i++)
+            {
+                Parts[i] = new Part(originalFrame.Parts[i].ID, originalFrame.Parts[i].Texture, originalFrame.Parts[i].SourceRect, originalFrame.Parts[i].DestRect);
+                Parts[i].Parent = originalFrame.Parts[i].Parent;
+                Parts[i].Rotation = originalFrame.Parts[i].Rotation;
+                Parts[i].Scale = originalFrame.Parts[i].Scale;
+                Parts[i].Origin = originalFrame.Parts[i].Origin;
+                Parts[i].WorldOrigin = originalFrame.Parts[i].WorldOrigin;
+                Parts[i].Position = originalFrame.Parts[i].Position;
+                Parts[i].Tint = originalFrame.Parts[i].Tint;
+                Parts[i].State = originalFrame.Parts[i].State;
+            }
+            //SelectedPart = Parts[originalFrame.SelectedIndex];
+            //Root = originalFrame.Root;
+            Ticks = originalFrame.Ticks;
         }
 
         public void Update(Cursor cursor)
+        {
+            this.cursor = cursor;
+            foreach (Part part in Parts)
+            {
+                part.Update(cursor);
+            }
+        }
+
+        public void SetSelectedPart()
         {
             if (Parts.Length > 0)
             {
@@ -33,12 +65,11 @@ namespace ProjectSkelAnimator
                     {
                         part.State = PartState.Selected;
                     }
-                    part.Update(cursor);
                 }
             }
         }
 
-        public void Add(Part newPart)
+        public void AddPart(Part newPart)
         {
             int newSize = Parts.Length + 1;
             Part[] resizedParts = new Part[newSize];
@@ -53,6 +84,7 @@ namespace ProjectSkelAnimator
             SelectedIndex = newSize - 1;
             //SelectedPart = newPart;
             Parts = resizedParts;
+            SetSelectedPart();
 
             // if there is only one part set it to be the root.
             if (Parts.Length == 1)
@@ -65,7 +97,7 @@ namespace ProjectSkelAnimator
         /// Inserts a new part at the selected index + 1. The part at the selected index will become the parent of the new part.
         /// The array is recreated up to and including the selected index, the new part is inserted, then the rest of the array is added.
         /// </summary>
-        public void Insert(Part newPart)
+        public void InsertPart(Part newPart)
         {
             int newSize = Parts.Length + 1;
             Part[] resizedParts = new Part[newSize];
@@ -87,9 +119,10 @@ namespace ProjectSkelAnimator
 
             Parts = resizedParts;
             SelectedIndex++; // Automatically select the new part.
+            SetSelectedPart();
         }
 
-        public void Remove(Part removedPart)
+        public void RemovePart(Part removedPart)
         {
             if (Parts.Length != 0)
             {
@@ -120,6 +153,7 @@ namespace ProjectSkelAnimator
                     SelectedPart = null;
                     SelectedIndex = 0;
                 }
+                SetSelectedPart();
             }
         }
 
@@ -136,7 +170,7 @@ namespace ProjectSkelAnimator
         /// Changes the index order of the Parts array, which changes the draw order of the parts in the Frame.
         /// </summary>
         /// <param name="isUp"></param>
-        public void SwapOrder(bool isUp)
+        public void SwapPartOrder(bool isUp)
         {
             if (Parts.Length > 1)
             {
@@ -158,6 +192,7 @@ namespace ProjectSkelAnimator
                         SelectedIndex--;
                     }
                 }
+                SetSelectedPart();
             }
         }
 
@@ -179,9 +214,10 @@ namespace ProjectSkelAnimator
                 selectedPart = Parts[0];
                 SelectedIndex = 0;
             }
+            SetSelectedPart();
             return selectedPart;
         }
-        
+
         /// <summary>
         /// Returns the previous part in the hierarchy.
         /// </summary>
@@ -200,13 +236,13 @@ namespace ProjectSkelAnimator
                 selectedPart = Parts[Parts.Length - 1];
                 SelectedIndex = Parts.Length - 1;
             }
-
+            SetSelectedPart();
             return selectedPart;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            if(Parts != null)
+            if (Parts != null)
             {
 
                 foreach (Part part in Parts)

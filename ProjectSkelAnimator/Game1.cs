@@ -15,6 +15,7 @@ namespace ProjectSkelAnimator
         Texture2D[] partTextures;
         Texture2D cursorTexture;
         Texture2D transparentTexture;
+        Texture2D pixelTexture;
         PartsPalette partsPalette;
         Frame currentFrame;
         Cursor cursor;
@@ -58,8 +59,10 @@ namespace ProjectSkelAnimator
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             partTextures = new Texture2D[32];
-            animation = new Animation();
-            animation.Add(new Frame(animation.Parts));
+            pixelTexture = new Texture2D(GraphicsDevice, 1, 1);
+            pixelTexture.SetData(new Color[] { Color.White });
+            animation = new Animation(pixelTexture);
+            animation.AddFrame(new Frame());
             currentFrame = animation.CurrentFrame;
             transparentTexture = Content.Load<Texture2D>("gfx/transparency");
             cursorTexture = Content.Load<Texture2D>("gfx/cursors");
@@ -158,18 +161,28 @@ namespace ProjectSkelAnimator
             }
             else if (newFrameButton.IsClicked)
             {
+                //if (animation.Frames.Length > 1)
+                //{
+                //    animation.AddFrame(new Frame());
+                //}
+                //else
+                //{
+                //    animation.InsertFrame(new Frame());
+                //}
+
+                Frame newFrame = currentFrame;
                 if (animation.Frames.Length > 1)
                 {
-                    animation.Add(new Frame(animation.Parts));
+                    animation.AddFrame(new Frame(newFrame));
                 }
                 else
                 {
-                    animation.Insert(new Frame(animation.Parts));
+                    animation.InsertFrame(new Frame(newFrame));
                 }
             }
             else if (deleteFrameButton.IsClicked)
             {
-                if (animation.Frames.Length > 1) { animation.Remove(currentFrame); } // There will always be at least 1 frame.
+                if (animation.Frames.Length > 1) { animation.RemoveFrame(currentFrame); } // There will always be at least 1 frame.
             }
             partsPalette.Update(cursor);
             currentFrame.Update(cursor);
@@ -187,8 +200,11 @@ namespace ProjectSkelAnimator
 
             partsPalette.Draw(spriteBatch);
             currentFrame.Draw(spriteBatch);
-            spriteBatch.DrawString(consolas, frameName + animation.CurrentIndex, new Vector2(16,48), Color.White);
+            animation.Draw(spriteBatch);
+            spriteBatch.DrawString(consolas, frameName + animation.CurrentFrameIndex, new Vector2(16,48), Color.White);
             spriteBatch.DrawString(consolas, frameTicks + currentFrame.Ticks, new Vector2(16, 64), Color.White);
+            if (currentFrame.SelectedPart != null)
+            { spriteBatch.DrawString(consolas, "Selected Part ID: " + currentFrame.SelectedPart.ID.ToString(), new Vector2(16, 80), Color.White); }
 
             buttonPanel.Draw(spriteBatch);
             cursor.Draw(spriteBatch); // cursor should be drawn after everything else.

@@ -7,6 +7,7 @@ namespace ProjectSkelAnimator
     enum PartState { Preview, Selected, Idle };
     class Part
     {
+        public int ID { get; set; }
         public Part Parent { get; set; }
         public Texture2D Texture { get; set; }
         public Rectangle SourceRect { get; set; }
@@ -19,7 +20,21 @@ namespace ProjectSkelAnimator
 
         public Color Tint = Color.White;
         public PartState State = PartState.Preview;
+        public bool WasChanged = false;
         
+        public Part(int id, Texture2D texture, Rectangle sourceRect, Rectangle destRect)
+        {
+            ID = id;
+            this.Texture = texture;
+            this.DestRect = destRect;
+            this.SourceRect = sourceRect;
+            Origin = new Vector2(DestRect.Width / 2, DestRect.Height / 2);
+            Position = new Vector2(DestRect.X, DestRect.Y);
+            WorldOrigin = new Vector2(DestRect.X + (DestRect.Width / 2), DestRect.Y + (DestRect.Height / 2));
+            Scale = 1f;
+            Rotation = 0f;
+        }
+
         public Part(Texture2D texture, Rectangle sourceRect, Rectangle destRect)
         {
             this.Texture = texture;

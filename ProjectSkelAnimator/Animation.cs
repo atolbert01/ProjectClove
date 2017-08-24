@@ -9,13 +9,17 @@ namespace ProjectSkelAnimator
     /// </summary>
     class Animation
     {
+        public Rectangle Bounds { get; set; }
         public Part[] Parts { get; set; }
         public Frame[] Frames { get; set; }
+        public Texture2D PixelTexture { get; set; }
         public Frame CurrentFrame;
-        public int CurrentIndex = 0;
-        
-        public Animation()
+        public int CurrentFrameIndex = 0;
+        public int SelectedPartIndex = 0;
+        public Animation(Texture2D pixelTexture)
         {
+            PixelTexture = pixelTexture;
+            Bounds = new Rectangle(200,200,128,196);
             Frames = new Frame[0];
             Parts = new Part[0];
         }
@@ -28,7 +32,7 @@ namespace ProjectSkelAnimator
             //}
         }
 
-        public void Add(Frame newFrame)
+        public void AddFrame(Frame newFrame)
         {
             int newSize = Frames.Length + 1;
             Frame[] resizedFrames = new Frame[newSize];
@@ -40,15 +44,15 @@ namespace ProjectSkelAnimator
             }
             // Finally, add the new frame to the new array.
             resizedFrames[newSize - 1] = newFrame;
-            CurrentIndex = newSize - 1;
+            CurrentFrameIndex = newSize - 1;
             Frames = resizedFrames;
-            CurrentFrame = Frames[CurrentIndex];
+            CurrentFrame = Frames[CurrentFrameIndex];
         }
 
         /// <summary>
         /// Inserts a new frame at the CurrentIndex + 1. The array is recreated up to and including the CurrentIndex, the new frame is inserted, then the rest of the array is added.
         /// </summary>
-        public void Insert(Frame newFrame)
+        public void InsertFrame(Frame newFrame)
         {
             int newSize = Frames.Length + 1;
             Frame[] resizedFrames = new Frame[newSize];
@@ -56,7 +60,7 @@ namespace ProjectSkelAnimator
             int j = 0;
             for (int i = 0; i < resizedFrames.Length; i++)
             {
-                if (i != CurrentIndex + 1)
+                if (i != CurrentFrameIndex + 1)
                 {
                     resizedFrames[i] = Frames[j];
                     j++;
@@ -68,11 +72,11 @@ namespace ProjectSkelAnimator
             }
 
             Frames = resizedFrames;
-            CurrentIndex++; // Automatically select the new Frame.
-            CurrentFrame = Frames[CurrentIndex];
+            CurrentFrameIndex++; // Automatically select the new Frame.
+            CurrentFrame = Frames[CurrentFrameIndex];
         }
 
-        public void Remove(Frame removedFrame)
+        public void RemoveFrame(Frame removedFrame)
         {
             if (Frames.Length != 0)
             {
@@ -85,7 +89,7 @@ namespace ProjectSkelAnimator
                     if (Frames[i] != removedFrame)
                     {
                         resizedFrames[j] = Frames[i];
-                        CurrentIndex = j;
+                        CurrentFrameIndex = j;
                         CurrentFrame = Frames[j];
                         j++;
                     }
@@ -95,7 +99,7 @@ namespace ProjectSkelAnimator
                 if (Frames.Length == 0)
                 {
                     CurrentFrame = null;
-                    CurrentIndex = 0;
+                    CurrentFrameIndex = 0;
                 }
             }
         }
@@ -104,29 +108,29 @@ namespace ProjectSkelAnimator
         /// Changes the index order of the Frames in the array.
         /// </summary>
         /// <param name="isFwd"></param>
-        public void SwapOrder(bool isFwd)
+        public void SwapFrameOrder(bool isFwd)
         {
             if (Frames.Length > 1)
             {
                 if (isFwd)
                 {
-                    if (CurrentIndex + 1 < Frames.Length)
+                    if (CurrentFrameIndex + 1 < Frames.Length)
                     {
-                        Frames[CurrentIndex] = Frames[CurrentIndex + 1];
-                        Frames[CurrentIndex + 1] = CurrentFrame;
-                        CurrentIndex++;
+                        Frames[CurrentFrameIndex] = Frames[CurrentFrameIndex + 1];
+                        Frames[CurrentFrameIndex + 1] = CurrentFrame;
+                        CurrentFrameIndex++;
                     }
                 }
                 else
                 {
-                    if (CurrentIndex - 1 >= 0)
+                    if (CurrentFrameIndex - 1 >= 0)
                     {
-                        Frames[CurrentIndex] = Frames[CurrentIndex - 1];
-                        Frames[CurrentIndex - 1] = CurrentFrame;
-                        CurrentIndex--;
+                        Frames[CurrentFrameIndex] = Frames[CurrentFrameIndex - 1];
+                        Frames[CurrentFrameIndex - 1] = CurrentFrame;
+                        CurrentFrameIndex--;
                     }
                 }
-                CurrentFrame = Frames[CurrentIndex];
+                CurrentFrame = Frames[CurrentFrameIndex];
             }
         }
 
@@ -138,17 +142,17 @@ namespace ProjectSkelAnimator
         {
             Frame currentFrame = null;
 
-            if (CurrentIndex + 1 <= Frames.Length - 1)
+            if (CurrentFrameIndex + 1 <= Frames.Length - 1)
             {
-                currentFrame = Frames[CurrentIndex + 1];
-                CurrentIndex++;
+                currentFrame = Frames[CurrentFrameIndex + 1];
+                CurrentFrameIndex++;
             }
             else
             {
                 currentFrame = Frames[0];
-                CurrentIndex = 0;
+                CurrentFrameIndex = 0;
             }
-            CurrentFrame = Frames[CurrentIndex];
+            CurrentFrame = Frames[CurrentFrameIndex];
             CurrentFrame.CurrentTick = 0; // Used in animation playback.
         }
 
@@ -160,22 +164,22 @@ namespace ProjectSkelAnimator
         {
             Frame currentFrame = null;
 
-            if (CurrentIndex - 1 >= 0)
+            if (CurrentFrameIndex - 1 >= 0)
             {
-                currentFrame = Frames[CurrentIndex - 1];
-                CurrentIndex--;
+                currentFrame = Frames[CurrentFrameIndex - 1];
+                CurrentFrameIndex--;
             }
             else
             {
                 currentFrame = Frames[Frames.Length - 1];
-                CurrentIndex = Frames.Length - 1;
+                CurrentFrameIndex = Frames.Length - 1;
             }
-            CurrentFrame = Frames[CurrentIndex];
+            CurrentFrame = Frames[CurrentFrameIndex];
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            
+            spriteBatch.Draw(PixelTexture, Bounds, Color.Red);
         }
     }
 }

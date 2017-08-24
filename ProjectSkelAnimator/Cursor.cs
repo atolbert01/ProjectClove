@@ -18,6 +18,7 @@ namespace ProjectSkelAnimator
         public Part SelectedPart;
         public Part StandbyPart;
         public SourceRectangleInfo[] SourceRectangles;
+        public int IDCount = 0;
 
         Texture2D cursorTexture;
         GraphicsDeviceManager graphics;
@@ -80,8 +81,8 @@ namespace ProjectSkelAnimator
                 else if (KeyboardState.IsKeyDown(Keys.R)) { State = CursorState.Rotate; }
             }
 
-            if (KeyboardState.IsKeyDown(Keys.Up) && PrevKeyboardState.IsKeyUp(Keys.Up)) { Frame.SwapOrder(true); }
-            if (KeyboardState.IsKeyDown(Keys.Down) && PrevKeyboardState.IsKeyUp(Keys.Down)) { Frame.SwapOrder(false); }
+            if (KeyboardState.IsKeyDown(Keys.Up) && PrevKeyboardState.IsKeyUp(Keys.Up)) { Frame.SwapPartOrder(true); }
+            if (KeyboardState.IsKeyDown(Keys.Down) && PrevKeyboardState.IsKeyUp(Keys.Down)) { Frame.SwapPartOrder(false); }
 
             if (KeyboardState.IsKeyDown(Keys.Right) && PrevKeyboardState.IsKeyUp(Keys.Right)) { SelectedPart = Frame.NextPart(); }
             if (KeyboardState.IsKeyDown(Keys.Left) && PrevKeyboardState.IsKeyUp(Keys.Left)) { SelectedPart = Frame.PreviousPart(); }
@@ -121,8 +122,9 @@ namespace ProjectSkelAnimator
                         if (StandbyPart != null)
                         {
                             partAdded = false;
+                            StandbyPart.ID = IDCount;
                             StandbyPart.Position = new Vector2(MouseState.X, MouseState.Y);
-                            StandbyPart.DestRect = new Rectangle((int)StandbyPart.Position.X - StandbyPart.SourceRect.Width/2, (int)StandbyPart.Position.Y - StandbyPart.SourceRect.Height / 2, StandbyPart.SourceRect.Width, StandbyPart.SourceRect.Width);
+                            StandbyPart.DestRect = new Rectangle((int)StandbyPart.Position.X - StandbyPart.SourceRect.Width / 2, (int)StandbyPart.Position.Y - StandbyPart.SourceRect.Height / 2, StandbyPart.SourceRect.Width, StandbyPart.SourceRect.Width);
                             StandbyPart.Origin = new Vector2(StandbyPart.DestRect.Width / 2, StandbyPart.DestRect.Height / 2);
                             StandbyPart.WorldOrigin = new Vector2((int)StandbyPart.Position.X, (int)StandbyPart.Position.Y);
                             StandbyPart.State = PartState.Selected;
@@ -135,12 +137,13 @@ namespace ProjectSkelAnimator
                         {
                             if (Frame.Parts.Length < 1)
                             {
-                                Frame.Add(StandbyPart);
+                                Frame.AddPart(StandbyPart);
                             }
                             else
                             {
-                                Frame.Insert(StandbyPart);
+                                Frame.InsertPart(StandbyPart);
                             }
+                            IDCount++;
                             partAdded = true;
                             StandbyPart = new Part(StandbyPart.Texture, StandbyPart.SourceRect, StandbyPart.DestRect);
                         }
@@ -158,7 +161,7 @@ namespace ProjectSkelAnimator
                         {
                             if (MouseState.LeftButton == ButtonState.Pressed && PrevMouseState.LeftButton == ButtonState.Released)
                             {
-                                Frame.Remove(SelectedPart);
+                                Frame.RemovePart(SelectedPart);
                             }
                         }
                     }
