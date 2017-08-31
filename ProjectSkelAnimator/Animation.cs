@@ -19,13 +19,23 @@ namespace ProjectSkelAnimator
         public Animation(Texture2D pixelTexture)
         {
             PixelTexture = pixelTexture;
-            Bounds = new Rectangle(200,200,128,196);
+            Bounds = new Rectangle(0,0,0,0);
             Frames = new Frame[0];
             Parts = new Part[0];
         }
 
         public void Update(Cursor cursor)
         {
+            //Bounds = new Rectangle(cursor.BoundsRect.X, cursor.BoundsRect.Y, cursor.BoundsRect.Width, cursor.BoundsRect.Height);
+            
+            if (cursor.BoundsRect.Width > 0)
+            {
+                Bounds = cursor.BoundsRect;
+            }
+            else
+            {
+                Bounds = new Rectangle(0, 0, 0, 0);
+            }
             //if (Frames.Length > 0)
             //{
             //    CurrentFrame = Frames[CurrentIndex];
@@ -179,7 +189,7 @@ namespace ProjectSkelAnimator
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(PixelTexture, Bounds, Color.Red);
+            spriteBatch.Draw(PixelTexture, Bounds, Color.Black * 0.33f);
         }
     }
 }

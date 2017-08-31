@@ -88,6 +88,12 @@ namespace ProjectSkelAnimator
             spriteBatch.Draw(Texture, Position, SourceRect, Tint, Rotation, Origin, Scale, SpriteEffects.None, 0);
         }
 
+        public void Draw(SpriteBatch spriteBatch, Color color)
+        {
+            Tint = color;
+            spriteBatch.Draw(Texture, Position, SourceRect, Tint, Rotation, Origin, Scale, SpriteEffects.None, 0);
+        }
+
         public void SetParent(Part parent)
         {
             Parent = parent;

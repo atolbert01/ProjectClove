@@ -13,6 +13,7 @@ namespace ProjectSkelAnimator
         public int CurrentTick = 0;
         Cursor cursor;
 
+
         public Frame()
         {
             //this.cursor = cursor;
@@ -36,7 +37,8 @@ namespace ProjectSkelAnimator
                 Parts[i].Tint = originalFrame.Parts[i].Tint;
                 Parts[i].State = originalFrame.Parts[i].State;
             }
-            //SelectedPart = Parts[originalFrame.SelectedIndex];
+            SelectedIndex = originalFrame.SelectedIndex;
+            SelectedPart = Parts[SelectedIndex];
             //Root = originalFrame.Root;
             Ticks = originalFrame.Ticks;
         }
@@ -250,6 +252,21 @@ namespace ProjectSkelAnimator
                     if (part != null)
                     {
                         part.Draw(spriteBatch);
+                    }
+                }
+            }
+        }
+
+        public void Draw(SpriteBatch spriteBatch, Color color)
+        {
+            if (Parts != null)
+            {
+
+                foreach (Part part in Parts)
+                {
+                    if (part != null)
+                    {
+                        part.Draw(spriteBatch, color);
                     }
                 }
             }

@@ -13,6 +13,7 @@ namespace ProjectSkelAnimator
         public bool IsClicked { get; set; }
         public int SourceIndex { get; set; }
         public bool QuickClick;
+        public bool IsCursorIntersect { get; set; }
         public int GridSize = 16;
         public Color Tint = Color.White;
         SourceRectangleInfo[] SourceRectangles;
@@ -21,10 +22,33 @@ namespace ProjectSkelAnimator
             Texture = texture;
             DestRect = destRect;
             IsClicked = false;
+            IsCursorIntersect = false;
 
         }
-        public void Update()
+        public void Update(Cursor cursor)
         {
+            if (cursor.DestRect.Intersects(DestRect))
+            {
+                if (!IsCursorIntersect)
+                {
+                    cursor.PrevState = cursor.State;
+                }
+                IsCursorIntersect = true;
+                cursor.State = CursorState.Arrow;
+            }
+            else if (!cursor.DestRect.Intersects(DestRect))
+            {
+                if (IsCursorIntersect)
+                {
+                    cursor.State = cursor.PrevState;
+                    IsCursorIntersect = false;
+                }
+
+            }
+            //else
+            //{
+            //    cursor.State = cursor.PrevState;
+            //}
             if (IsClicked == true)
             {
                 Tint = Color.DarkRed;
@@ -45,7 +69,7 @@ namespace ProjectSkelAnimator
     {
         public PlayButton(Texture2D texture, Rectangle destRect) : base(texture, destRect)
         {
-            SourceIndex = 10;
+            SourceIndex = 14;
             QuickClick = false;
         }
     }
@@ -54,7 +78,7 @@ namespace ProjectSkelAnimator
     {
         public PauseButton(Texture2D texture, Rectangle destRect) : base(texture, destRect)
         {
-            SourceIndex = 9;
+            SourceIndex = 13;
             QuickClick = false;
         }
     }
@@ -63,7 +87,7 @@ namespace ProjectSkelAnimator
     {
         public NextButton(Texture2D texture, Rectangle destRect) : base(texture, destRect)
         {
-            SourceIndex = 11;
+            SourceIndex = 15;
             QuickClick = true;
         }
     }
@@ -72,7 +96,7 @@ namespace ProjectSkelAnimator
     {
         public PrevButton(Texture2D texture, Rectangle destRect) : base(texture, destRect)
         {
-            SourceIndex = 8;
+            SourceIndex = 12;
             QuickClick = true;
         }
     }
@@ -81,7 +105,7 @@ namespace ProjectSkelAnimator
     {
         public NewFrameButton(Texture2D texture, Rectangle destRect) : base(texture, destRect)
         {
-            SourceIndex = 14;
+            SourceIndex = 18;
             QuickClick = true;
         }
     }
@@ -90,7 +114,7 @@ namespace ProjectSkelAnimator
     {
         public DeleteFrameButton(Texture2D texture, Rectangle destRect) : base(texture, destRect)
         {
-            SourceIndex = 15;
+            SourceIndex = 19;
             QuickClick = true;
         }
     }
@@ -99,7 +123,7 @@ namespace ProjectSkelAnimator
     {
         public PlusTicksButton(Texture2D texture, Rectangle destRect) : base(texture, destRect)
         {
-            SourceIndex = 12;
+            SourceIndex = 16;
             QuickClick = true;
         }
     }
@@ -108,11 +132,82 @@ namespace ProjectSkelAnimator
     {
         public MinusTicksButton(Texture2D texture, Rectangle destRect) : base(texture, destRect)
         {
-            SourceIndex = 13;
+            SourceIndex = 17;
             QuickClick = true;
         }
     }
 
+    class OnionSkinButton : Button
+    {
+        public OnionSkinButton(Texture2D texture, Rectangle destRect) : base(texture, destRect)
+        {
+            SourceIndex = 9;
+            QuickClick = true;
+        }
+    }
+
+    class TweenButton : Button
+    {
+        public TweenButton(Texture2D texture, Rectangle destRect) : base(texture, destRect)
+        {
+            SourceIndex = 10;
+            QuickClick = true;
+        }
+    }
+
+    class UpButton : Button
+    {
+        public UpButton(Texture2D texture, Rectangle destRect) : base(texture, destRect)
+        {
+            SourceIndex = 22;
+            QuickClick = true;
+        }
+    }
+
+    class DownButton : Button
+    {
+        public DownButton(Texture2D texture, Rectangle destRect) : base(texture, destRect)
+        {
+            SourceIndex = 23;
+            QuickClick = true;
+        }
+    }
+
+    class LeftButton : Button
+    {
+        public LeftButton(Texture2D texture, Rectangle destRect) : base(texture, destRect)
+        {
+            SourceIndex = 20;
+            QuickClick = true;
+        }
+    }
+
+    class RightButton : Button
+    {
+        public RightButton(Texture2D texture, Rectangle destRect) : base(texture, destRect)
+        {
+            SourceIndex = 21;
+            QuickClick = true;
+        }
+    }
+
+    class SaveButton : Button
+    {
+        public SaveButton(Texture2D texture, Rectangle destRect) : base(texture, destRect)
+        {
+            SourceIndex = 24;
+            QuickClick = true;
+        }
+    }
+
+    class LoadButton : Button
+    {
+        public LoadButton(Texture2D texture, Rectangle destRect) : base(texture, destRect)
+        {
+            SourceIndex = 25;
+            QuickClick = true;
+        }
+    }
     class ButtonPanel
     {
         public Button[] Buttons { get; set; }
@@ -192,7 +287,7 @@ namespace ProjectSkelAnimator
                 {
                     btn.IsClicked = false;
                 }
-                btn.Update();
+                btn.Update(cursor);
             }
         }
 
