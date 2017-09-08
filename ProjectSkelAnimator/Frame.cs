@@ -5,20 +5,20 @@ namespace ProjectSkelAnimator
 {
     class Frame
     {
+        public string Script;
         public Part[] Parts;
         public Part SelectedPart;
         public Part Root;
         public int SelectedIndex = 0;
         public int Ticks = 4;
         public int CurrentTick = 0;
-        Cursor cursor;
-
 
         public Frame()
         {
             //this.cursor = cursor;
             //Parts = parts;
             Parts = new Part[0];
+            Script = "";
         }
 
         public Frame(Frame originalFrame)
@@ -38,14 +38,21 @@ namespace ProjectSkelAnimator
                 Parts[i].State = originalFrame.Parts[i].State;
             }
             SelectedIndex = originalFrame.SelectedIndex;
-            SelectedPart = Parts[SelectedIndex];
+            if (Parts != null)
+            {
+                SelectedPart = Parts[SelectedIndex];
+            }
+            else
+            {
+                SelectedPart = null;
+            }
             //Root = originalFrame.Root;
             Ticks = originalFrame.Ticks;
+            Script = "";
         }
 
         public void Update(Cursor cursor)
         {
-            this.cursor = cursor;
             foreach (Part part in Parts)
             {
                 part.Update(cursor);

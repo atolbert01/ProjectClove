@@ -45,10 +45,7 @@ namespace ProjectSkelAnimator
                 }
 
             }
-            //else
-            //{
-            //    cursor.State = cursor.PrevState;
-            //}
+
             if (IsClicked == true)
             {
                 Tint = Color.DarkRed;
@@ -208,6 +205,16 @@ namespace ProjectSkelAnimator
             QuickClick = true;
         }
     }
+
+    class EyeButton : Button
+    {
+        public EyeButton(Texture2D texture, Rectangle destRect) : base(texture, destRect)
+        {
+            SourceIndex = 11;
+            QuickClick = false;
+        }
+    }
+
     class ButtonPanel
     {
         public Button[] Buttons { get; set; }
@@ -221,7 +228,10 @@ namespace ProjectSkelAnimator
         {
             foreach (Button btn in Buttons)
             {
-                btn.Load(btn.SourceIndex);
+                if (btn != null)
+                {
+                    btn.Load(btn.SourceIndex);
+                }
             }
         }
 
@@ -229,65 +239,68 @@ namespace ProjectSkelAnimator
         {
             foreach (Button btn in Buttons)
             {
-                if (ClickedButton == null)
+                if (btn != null)
                 {
-                    btn.Tint = Color.White;
-                    if (cursor.DestRect.Intersects(btn.DestRect))
-                    {
-                        btn.Tint = Color.Yellow;
-                        if (cursor.MouseState.LeftButton == ButtonState.Pressed && cursor.PrevMouseState.LeftButton == ButtonState.Released)
-                        {
-                            ClickedButton = btn;
-                            ClickedButton.IsClicked = true;
-                        }
-                    }
-                    else
+                    if (ClickedButton == null)
                     {
                         btn.Tint = Color.White;
-                    }
-                }
-                else if (btn != ClickedButton)
-                {
-                    btn.Tint = Color.White;
-                    if (cursor.DestRect.Intersects(btn.DestRect))
-                    {
-                        btn.Tint = Color.Yellow;
-                        if (cursor.MouseState.LeftButton == ButtonState.Pressed && cursor.PrevMouseState.LeftButton == ButtonState.Released)
-                        {
-                            ClickedButton.IsClicked = false;
-                            ClickedButton.Tint = Color.White;
-                            btn.IsClicked = true;
-                            ClickedButton = btn;
-                        }
-                    }
-                    else
-                    {
-                        btn.Tint = Color.White;
-                    }
-                }
-                else if (btn == ClickedButton)
-                {
-                    if (btn.QuickClick)
-                    {
-                        ClickedButton.IsClicked = false;
-                        btn.Tint = Color.White;
-                        ClickedButton = null;
-                    }
-                    else if (cursor.MouseState.LeftButton == ButtonState.Pressed && cursor.PrevMouseState.LeftButton == ButtonState.Released)
-                    {
                         if (cursor.DestRect.Intersects(btn.DestRect))
+                        {
+                            btn.Tint = Color.Yellow;
+                            if (cursor.MouseState.LeftButton == ButtonState.Pressed && cursor.PrevMouseState.LeftButton == ButtonState.Released)
+                            {
+                                ClickedButton = btn;
+                                ClickedButton.IsClicked = true;
+                            }
+                        }
+                        else
+                        {
+                            btn.Tint = Color.White;
+                        }
+                    }
+                    else if (btn != ClickedButton)
+                    {
+                        btn.Tint = Color.White;
+                        if (cursor.DestRect.Intersects(btn.DestRect))
+                        {
+                            btn.Tint = Color.Yellow;
+                            if (cursor.MouseState.LeftButton == ButtonState.Pressed && cursor.PrevMouseState.LeftButton == ButtonState.Released)
+                            {
+                                ClickedButton.IsClicked = false;
+                                ClickedButton.Tint = Color.White;
+                                btn.IsClicked = true;
+                                ClickedButton = btn;
+                            }
+                        }
+                        else
+                        {
+                            btn.Tint = Color.White;
+                        }
+                    }
+                    else if (btn == ClickedButton)
+                    {
+                        if (btn.QuickClick)
                         {
                             ClickedButton.IsClicked = false;
                             btn.Tint = Color.White;
                             ClickedButton = null;
                         }
+                        else if (cursor.MouseState.LeftButton == ButtonState.Pressed && cursor.PrevMouseState.LeftButton == ButtonState.Released)
+                        {
+                            if (cursor.DestRect.Intersects(btn.DestRect))
+                            {
+                                ClickedButton.IsClicked = false;
+                                btn.Tint = Color.White;
+                                ClickedButton = null;
+                            }
+                        }
                     }
+                    else
+                    {
+                        btn.IsClicked = false;
+                    }
+                    btn.Update(cursor);
                 }
-                else
-                {
-                    btn.IsClicked = false;
-                }
-                btn.Update(cursor);
             }
         }
 
@@ -295,7 +308,10 @@ namespace ProjectSkelAnimator
         {
             foreach (Button btn in Buttons)
             {
-                spriteBatch.Draw(btn.Texture, btn.DestRect, btn.SourceRect, btn.Tint);
+                if (btn != null)
+                {
+                    spriteBatch.Draw(btn.Texture, btn.DestRect, btn.SourceRect, btn.Tint);
+                }
             }
         }
     }

@@ -12,6 +12,7 @@ namespace ProjectSkelAnimator
         //Texture2D pixel;
         Texture2D transparentTexture;
         GraphicsDeviceManager graphics;
+        public Vector2 Scroll;
         int gridSize = 64;
         int totalParts = 0; // we'll use this to determine how many source and destination rectangles to make.
 
@@ -55,6 +56,15 @@ namespace ProjectSkelAnimator
         {
             foreach (Part part in parts)
             {
+                if (Scroll != null)
+                {
+                    if (Scroll != Vector2.Zero)
+                    {
+                        part.Position += Scroll;
+                        part.DestRect = new Rectangle((int)part.Position.X, (int)part.Position.Y, part.DestRect.Width, part.DestRect.Height);
+
+                    }
+                }
                 part.Update(cursor);
             }
         }

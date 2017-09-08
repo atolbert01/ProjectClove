@@ -20,3 +20,8 @@ D:\GameDev\.NET Projects\ProjectClove\ProjectSkelAnimator\bin\DesktopGL\AnyCPU\D
 D:\GameDev\.NET Projects\ProjectClove\ProjectSkelAnimator\bin\DesktopGL\AnyCPU\Debug\Content\gfx\cursors.xnb
 D:\GameDev\.NET Projects\ProjectClove\ProjectSkelAnimator\bin\DesktopGL\AnyCPU\Debug\Content\gfx\transparency.xnb
 D:\GameDev\.NET Projects\ProjectClove\ProjectSkelAnimator\bin\DesktopGL\AnyCPU\Debug\Content\consolas.xnb
+D:\GameDev\.NET Projects\ProjectClove\ProjectSkelAnimator\bin\DesktopGL\AnyCPU\Debug\Microsoft.Xna.Framework.Storage.dll
+D:\GameDev\.NET Projects\ProjectClove\ProjectSkelAnimator\bin\DesktopGL\AnyCPU\Debug\Microsoft.Xna.Framework.dll
+D:\GameDev\.NET Projects\ProjectClove\ProjectSkelAnimator\bin\DesktopGL\AnyCPU\Debug\Microsoft.Xna.Framework.Storage.xml
+D:\GameDev\.NET Projects\ProjectClove\ProjectSkelAnimator\bin\DesktopGL\AnyCPU\Debug\Microsoft.Xna.Framework.xml
+D:\GameDev\.NET Projects\ProjectClove\ProjectSkelAnimator\bin\DesktopGL\AnyCPU\Debug\Content\data\File.xnb

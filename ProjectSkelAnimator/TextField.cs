@@ -55,8 +55,6 @@ namespace ProjectSkelAnimator
                         {
                             cursor.EditingField = this;
                             cursor.Text = Text;
-                            //cursor.CurrentKeys = Text;
-                            //cursor.PrevKeys = Text;
                             cursor.State = CursorState.TextEdit;
                             PrevState = State;
                             State = TextState.Edit;

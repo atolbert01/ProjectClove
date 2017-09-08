@@ -2,6 +2,9 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Storage;
+using System.IO;
+using System.Xml.Serialization;
 
 namespace ProjectSkelAnimator
 {
@@ -21,24 +24,38 @@ namespace ProjectSkelAnimator
         Frame currentFrame;
         Cursor cursor;
         ButtonPanel buttonPanel;
+        ButtonPanel eyeButtonPanel;
         PlayButton playButton;
         PauseButton pauseButton;
         NextButton nextButton;
         PrevButton prevButton;
         NewFrameButton newFrameButton;
         DeleteFrameButton deleteFrameButton;
-        PlusTicksButton plusTicksButton;
+        PlusTicksButton plusTicksButton, addAnimButton;
         OnionSkinButton onionSkinButton;
         TweenButton tweenButton;
         SaveButton saveButton;
         LoadButton loadButton;
-        MinusTicksButton minusTicksButton;
-        Animation animation;
+        MinusTicksButton minusTicksButton, removeAnimButton;
+        UpButton animUpButton;
+        DownButton animDownButton;
+        LeftButton paletteLeftButton;
+        RightButton paletteRightButton;
+        AnimationGroup animGroup;
+        Animation currentAnimation;
+        TextField[] animGroupTextFields;
+        TextField[] textFields;
         TextField textBoundsX;
         TextField textBoundsY;
         TextField textBoundsWidth;
         TextField textBoundsHeight;
         TextField textTweenFrames;
+        TextField textAnimGroupName;
+        TextField textNewAnimName;
+        TextField textScript;
+        KeyboardState KeyState;
+        StorageContainer container;
+        StorageDevice device;
         string frameName = "Frame: ";
         string frameTicks = "Ticks: ";
         bool isOnionSkin = false;
@@ -70,21 +87,38 @@ namespace ProjectSkelAnimator
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
             partTextures = new Texture2D[32];
+
             pixelTexture = new Texture2D(GraphicsDevice, 1, 1);
             pixelTexture.SetData(new Color[] { Color.White });
-            animation = new Animation(pixelTexture);
-            animation.AddFrame(new Frame());
-            currentFrame = animation.CurrentFrame;
+
+            animGroup = new AnimationGroup(new Animation(pixelTexture));
+            currentAnimation = animGroup.CurrentAnimation;
+            currentAnimation.AddFrame(new Frame());
+            currentFrame = currentAnimation.CurrentFrame;
+
             transparentTexture = Content.Load<Texture2D>("gfx/transparency");
             cursorTexture = Content.Load<Texture2D>("gfx/cursors");
             consolas = Content.Load<SpriteFont>("consolas");
 
-            textBoundsX = new TextField(consolas, new Vector2(16, GraphicsDevice.Viewport.Height - 80), animation.Bounds.X.ToString(), "Bounds X:",12, pixelTexture);
-            textBoundsY = new TextField(consolas, new Vector2(128, GraphicsDevice.Viewport.Height - 80), animation.Bounds.Y.ToString(), "Bounds Y:", 12, pixelTexture);
-            textBoundsWidth = new TextField(consolas, new Vector2(240, GraphicsDevice.Viewport.Height - 80), animation.Bounds.Y.ToString(), "Bounds Width:", 12, pixelTexture);
-            textBoundsHeight = new TextField(consolas, new Vector2(352, GraphicsDevice.Viewport.Height - 80), animation.Bounds.Y.ToString(), "Bounds Height:", 12, pixelTexture);
-            textTweenFrames = new TextField(consolas, new Vector2(112, 32), "1", "Tween Frames:", 12, pixelTexture);
+            animGroupTextFields = new TextField[32];
+            textFields = new TextField[32];
+
+            Vector2 animGroupTextPos = new Vector2(16, 128);
+            textAnimGroupName = new TextField(consolas, animGroupTextPos, "", "Animation Group:", 12, pixelTexture);
+
+            for (int i = 0; i < animGroup.Animations.Length; i++)
+            {
+                Vector2 textPosition = new Vector2(animGroupTextPos.X + 20, 152 + ((consolas.LineSpacing + 2) * (i+ 1)));
+                animGroupTextFields[i] = AddNewTextField(textPosition);
+            }
+            textFields[0] = textBoundsX = new TextField(consolas, new Vector2(16, GraphicsDevice.Viewport.Height - 80), currentAnimation.Bounds.X.ToString(), "Bounds X:", 12, pixelTexture);
+            textFields[1] = textBoundsY = new TextField(consolas, new Vector2(128, GraphicsDevice.Viewport.Height - 80), currentAnimation.Bounds.Y.ToString(), "Bounds Y:", 12, pixelTexture);
+            textFields[2] = textBoundsWidth = new TextField(consolas, new Vector2(240, GraphicsDevice.Viewport.Height - 80), currentAnimation.Bounds.Y.ToString(), "Bounds Width:", 12, pixelTexture);
+            textFields[3] = textBoundsHeight = new TextField(consolas, new Vector2(352, GraphicsDevice.Viewport.Height - 80), currentAnimation.Bounds.Y.ToString(), "Bounds Height:", 12, pixelTexture);
+            textFields[4] = textTweenFrames = new TextField(consolas, new Vector2(112, 32), "1", "Tween Frames:", 12, pixelTexture);
+            textFields[5] = textScript = new TextField(consolas, new Vector2(GraphicsDevice.Viewport.Width/2 + 128, 32), currentFrame.Script, "Script:" , 120, pixelTexture);
 
             cursor = new Cursor(cursorTexture, graphics, currentFrame, consolas);
             cursor.Load();
@@ -96,6 +130,14 @@ namespace ProjectSkelAnimator
             plusTicksButton = new PlusTicksButton(cursorTexture, new Rectangle(112, 60, 16, 16));
             minusTicksButton = new MinusTicksButton(cursorTexture, new Rectangle(88, 60, 16, 16));
 
+            addAnimButton = new PlusTicksButton(cursorTexture, new Rectangle(96, 144, 16, 16));
+            removeAnimButton = new MinusTicksButton(cursorTexture, new Rectangle(72, 144, 16, 16));
+            animUpButton = new UpButton(cursorTexture, new Rectangle( 40, 144, 16, 16));
+            animDownButton = new DownButton(cursorTexture, new Rectangle(16, 144, 16, 16));
+
+            paletteLeftButton = new LeftButton(cursorTexture, new Rectangle(0, GraphicsDevice.Viewport.Height - 44, 24, 24));
+            paletteRightButton = new RightButton(cursorTexture, new Rectangle(GraphicsDevice.Viewport.Width - 24, GraphicsDevice.Viewport.Height - 44, 24, 24));
+
             onionSkinButton = new OnionSkinButton(cursorTexture, new Rectangle((graphics.GraphicsDevice.Viewport.Width / 2) - 96, 16, 24, 24));
             prevButton = new PrevButton(cursorTexture, new Rectangle((graphics.GraphicsDevice.Viewport.Width/2) - 64, 16, 24, 24));
             pauseButton = new PauseButton(cursorTexture, new Rectangle((graphics.GraphicsDevice.Viewport.Width / 2) - 32, 16, 24, 24));
@@ -105,9 +147,20 @@ namespace ProjectSkelAnimator
             saveButton = new SaveButton(cursorTexture, new Rectangle((graphics.GraphicsDevice.Viewport.Width) - 64, 16, 24, 24));
             loadButton = new LoadButton(cursorTexture, new Rectangle((graphics.GraphicsDevice.Viewport.Width) - 32, 16, 24, 24));
 
-            Button[] buttons = { prevButton, pauseButton, playButton, nextButton, newFrameButton, deleteFrameButton, plusTicksButton, minusTicksButton, tweenButton, onionSkinButton, saveButton, loadButton};
+            Button[] buttons = { prevButton, pauseButton, playButton, nextButton, newFrameButton, deleteFrameButton, plusTicksButton, minusTicksButton, tweenButton, saveButton, onionSkinButton, loadButton, addAnimButton, removeAnimButton, animUpButton, animDownButton, paletteLeftButton, paletteRightButton};
             buttonPanel = new ButtonPanel(buttons);
             buttonPanel.Load();
+
+            Button[] eyeButtons = new Button[animGroupTextFields.Length];
+            for (int i = 0; i < eyeButtons.Length; i++)
+            {
+                if (animGroupTextFields[i] != null)
+                {
+                    eyeButtons[i] = new EyeButton(cursorTexture, new Rectangle((int)animGroupTextFields[i].Position.X - 20, (int)animGroupTextFields[i].Position.Y - 1, 16, 16));
+                }
+            }
+            eyeButtonPanel = new ButtonPanel(eyeButtons);
+            eyeButtonPanel.Load();
 
             int textureCounter = 0;
             while (textureCounter != -1){textureCounter = LoadPartTextures(textureCounter);}
@@ -153,23 +206,25 @@ namespace ProjectSkelAnimator
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-            currentFrame = animation.CurrentFrame;
+            KeyState = Keyboard.GetState();
+            currentFrame = currentAnimation.CurrentFrame;
             cursor.Frame = currentFrame;
             cursor.Update();
             buttonPanel.Update(cursor);
+            eyeButtonPanel.Update(cursor);
             if (nextButton.IsClicked)
             {
-                animation.NextFrame();
+                currentAnimation.NextFrame();
             }
             else if (prevButton.IsClicked)
             {
-                animation.PreviousFrame();
+                currentAnimation.PreviousFrame();
             }
             else if (playButton.IsClicked)
             {
                 if (currentFrame.CurrentTick == currentFrame.Ticks)
                 {
-                    animation.NextFrame();
+                    currentAnimation.NextFrame();
                 }
                 currentFrame.CurrentTick++;
             }
@@ -183,28 +238,19 @@ namespace ProjectSkelAnimator
             }
             else if (newFrameButton.IsClicked)
             {
-                //if (animation.Frames.Length > 1)
-                //{
-                //    animation.AddFrame(new Frame());
-                //}
-                //else
-                //{
-                //    animation.InsertFrame(new Frame());
-                //}
-
                 Frame newFrame = currentFrame;
-                if (animation.Frames.Length > 1)
+                if (currentAnimation.Frames.Length > 1)
                 {
-                    animation.AddFrame(new Frame(newFrame));
+                    currentAnimation.AddFrame(new Frame(newFrame));
                 }
                 else
                 {
-                    animation.InsertFrame(new Frame(newFrame));
+                    currentAnimation.InsertFrame(new Frame(newFrame));
                 }
             }
             else if (deleteFrameButton.IsClicked)
             {
-                if (animation.Frames.Length > 1) { animation.RemoveFrame(currentFrame); } // There will always be at least 1 frame.
+                if (currentAnimation.Frames.Length > 1) { currentAnimation.RemoveFrame(currentFrame); } // There will always be at least 1 frame.
             }
             else if (onionSkinButton.IsClicked)
             {
@@ -212,63 +258,273 @@ namespace ProjectSkelAnimator
             }
             else if (tweenButton.IsClicked)
             {
-                if (animation.CurrentFrameIndex + 1 <= animation.Frames.Length)
+                if (currentAnimation.CurrentFrameIndex + 1 <= currentAnimation.Frames.Length)
                 {
-                    TweenFrames(currentFrame, animation.Frames[animation.CurrentFrameIndex + 1]);
+                    TweenFrames(currentFrame, currentAnimation.Frames[currentAnimation.CurrentFrameIndex + 1]);
+                }
+            }
+
+            if (paletteLeftButton.IsClicked)
+            {
+                partsPalette.Scroll = new Vector2(8, 0);
+            }
+            else if (paletteRightButton.IsClicked)
+            {
+                partsPalette.Scroll = new Vector2(-8, 0);
+            }
+            else
+            {
+                partsPalette.Scroll = Vector2.Zero;
+            }
+
+            if (addAnimButton.IsClicked)
+            {
+                // animGroupTextFields is effectively 1 indexed since the first text field is the group name
+                animGroup.AddAnimation(new Animation(pixelTexture));
+                animGroupTextFields[animGroup.Animations.Length - 1] = AddNewTextField(new Vector2(36, 152 + ((consolas.LineSpacing + 2) * animGroup.Animations.Length)));
+                eyeButtonPanel.Buttons[animGroup.Animations.Length - 1] = new EyeButton(cursorTexture, new Rectangle((int)animGroupTextFields[animGroup.Animations.Length - 1].Position.X - 20, (int)animGroupTextFields[animGroup.Animations.Length - 1].Position.Y - 1, 16, 16));
+                //eyeButtonPanel.Buttons[animGroup.Animations.Length] = new MinusTicksButton(cursorTexture, new Rectangle((int)animGroupTextFields[animGroup.Animations.Length].Position.X + (int)animGroupTextFields[animGroup.Animations.Length].Bounds.Width, (int)animGroupTextFields[animGroup.Animations.Length].Position.Y - 1, 16, 16));
+                eyeButtonPanel.Load();
+            }
+
+            if (saveButton.IsClicked)
+            {
+                SaveAnimation();
+            }
+
+            if (loadButton.IsClicked)
+            {
+                LoadAnimation();
+            }
+
+            for (int i = 0; i < animGroup.Animations.Length; i++)
+            {
+                if (eyeButtonPanel.Buttons[i] != null)
+                {
+                    if (eyeButtonPanel.Buttons[i].IsClicked)
+                    {
+                        currentAnimation = animGroup.Animations[i];
+
+                        if (currentAnimation.Frames.Length < 1)
+                        {
+                            currentAnimation.AddFrame(new Frame());
+                        }
+                        currentFrame = currentAnimation.CurrentFrame;
+                    }
                 }
             }
 
             partsPalette.Update(cursor);
-            currentFrame.Update(cursor);
-            animation.Update(cursor);
+            if (currentFrame != null){ currentFrame.Update(cursor); }
+            currentAnimation.Update(cursor);
 
-            textBoundsX.Update(cursor);
-            textBoundsY.Update(cursor);
-            textBoundsWidth.Update(cursor);
-            textBoundsHeight.Update(cursor);
-            textTweenFrames.Update(cursor);
+            foreach (TextField text in animGroupTextFields)
+            {
+                if (text != null) { text.Update(cursor); }
+            }
+
+            foreach (TextField text in textFields)
+            {
+                if (text != null) { text.Update(cursor); }
+            }
+
+            textAnimGroupName.Update(cursor);
 
             if (textBoundsX.State == TextState.None && textBoundsX.PrevState == TextState.Edit)
-            {
-                cursor.BoundsRect = new Rectangle(Int32.Parse(textBoundsX.Text), animation.Bounds.Y, animation.Bounds.Width, animation.Bounds.Height);
+            { 
+                currentAnimation.Bounds = new Rectangle(Int32.Parse(textBoundsX.Text), currentAnimation.Bounds.Y, currentAnimation.Bounds.Width, currentAnimation.Bounds.Height);
                 textBoundsX.PrevState = TextState.None;
             }
             else if (textBoundsX.State == TextState.None && textBoundsX.State == TextState.None)
             {
-                textBoundsX.Text = cursor.BoundsRect.X.ToString();
+                textBoundsX.Text = currentAnimation.Bounds.X.ToString();
             }
 
             if (textBoundsY.State == TextState.None && textBoundsY.PrevState == TextState.Edit)
             {
-                cursor.BoundsRect = new Rectangle(animation.Bounds.X, Int32.Parse(textBoundsY.Text), animation.Bounds.Width, animation.Bounds.Height);
+                currentAnimation.Bounds = new Rectangle(currentAnimation.Bounds.X, Int32.Parse(textBoundsY.Text), currentAnimation.Bounds.Width, currentAnimation.Bounds.Height);
                 textBoundsY.PrevState = TextState.None;
             }
             else if (textBoundsY.State == TextState.None && textBoundsY.State == TextState.None)
             {
-                textBoundsY.Text = cursor.BoundsRect.Y.ToString();
+                textBoundsY.Text = currentAnimation.Bounds.Y.ToString();
             }
 
             if (textBoundsWidth.State == TextState.None && textBoundsWidth.PrevState == TextState.Edit)
             {
-                cursor.BoundsRect = new Rectangle(animation.Bounds.X, animation.Bounds.Y, Int32.Parse(textBoundsWidth.Text), animation.Bounds.Height);
+                currentAnimation.Bounds = new Rectangle(currentAnimation.Bounds.X, currentAnimation.Bounds.Y, Int32.Parse(textBoundsWidth.Text), currentAnimation.Bounds.Height);
                 textBoundsWidth.PrevState = TextState.None;
             }
             else if (textBoundsWidth.State == TextState.None && textBoundsWidth.State == TextState.None)
             {
-                textBoundsWidth.Text = cursor.BoundsRect.Width.ToString();
+                textBoundsWidth.Text = currentAnimation.Bounds.Width.ToString();
             }
 
             if (textBoundsHeight.State == TextState.None && textBoundsHeight.PrevState == TextState.Edit)
             {
-                cursor.BoundsRect = new Rectangle(animation.Bounds.X, animation.Bounds.Y, animation.Bounds.Width, Int32.Parse(textBoundsHeight.Text));
+                currentAnimation.Bounds = new Rectangle(currentAnimation.Bounds.X, currentAnimation.Bounds.Y, currentAnimation.Bounds.Width, Int32.Parse(textBoundsHeight.Text));
                 textBoundsHeight.PrevState = TextState.None;
             }
             else if (textBoundsHeight.State == TextState.None && textBoundsHeight.State == TextState.None)
             {
-                textBoundsHeight.Text = cursor.BoundsRect.Height.ToString();
+                textBoundsHeight.Text = currentAnimation.Bounds.Height.ToString();
+            }
+
+            if (textAnimGroupName.State == TextState.Edit && textAnimGroupName.PrevState == TextState.None)
+            {
+                animGroup.GroupName = textAnimGroupName.Text;
+            }
+
+            if (textScript.State == TextState.Edit && textScript.PrevState == TextState.None)
+            {
+                currentFrame.Script = textScript.Text;
+            }
+
+            if (KeyState.IsKeyDown(Keys.NumPad4))
+            {
+                foreach (Frame frame in currentAnimation.Frames)
+                {
+                    foreach (Part part in frame.Parts)
+                    {
+                        part.Position += new Vector2(-4, 0);
+                    }
+                }
+            }
+            else if (KeyState.IsKeyDown(Keys.NumPad6))
+            {
+                foreach (Frame frame in currentAnimation.Frames)
+                {
+                    foreach (Part part in frame.Parts)
+                    {
+                        part.Position += new Vector2(4, 0);
+                    }
+                }
+            }
+
+            if (KeyState.IsKeyDown(Keys.NumPad8))
+            {
+                foreach (Frame frame in currentAnimation.Frames)
+                {
+                    foreach (Part part in frame.Parts)
+                    {
+                        part.Position += new Vector2(0, -4);
+                    }
+                }
+            }
+            else if (KeyState.IsKeyDown(Keys.NumPad2))
+            {
+                foreach (Frame frame in currentAnimation.Frames)
+                {
+                    foreach (Part part in frame.Parts)
+                    {
+                        part.Position += new Vector2(0, 4);
+                    }
+                }
+            }
+
+            for (int i = 0; i < animGroup.Animations.Length; i++)
+            {
+                if (animGroupTextFields[i] != null)
+                {
+                    if (animGroupTextFields[i].State == TextState.Edit && animGroupTextFields[i].PrevState == TextState.None)
+                    {
+                        animGroup.Animations[i].AnimationName = animGroupTextFields[i].Text;
+                    }
+                }
             }
 
             base.Update(gameTime);
+        }
+
+        void SaveAnimation()
+        {
+            BinaryWriter file = new BinaryWriter(File.Open(@"Content/data/" + animGroup.GroupName + ".anim", FileMode.Create));
+
+            file.Write(animGroup.Animations.Length); // int
+
+            foreach (Animation anim in animGroup.Animations)
+            {
+                file.Write(anim.AnimationName); // string
+                file.Write(anim.Bounds.X); file.Write(anim.Bounds.Y); file.Write(anim.Bounds.Width); file.Write(anim.Bounds.Height); // int int int int
+
+                file.Write(anim.Frames.Length); // int
+
+                for (int i = 0; i < anim.Frames.Length; i++)
+                {
+                    //file.Write(i); // int
+                    file.Write(anim.Frames[i].Ticks); // int
+                    file.Write(anim.Frames[i].Parts.Length); // int
+                    foreach (Part part in anim.Frames[i].Parts)
+                    {
+                        file.Write(part.ID); // int
+                        file.Write(part.IsFlipped); // bool
+                        file.Write(part.Origin.X); file.Write(part.Origin.Y); // float float
+                        file.Write(part.WorldOrigin.X); file.Write(part.WorldOrigin.Y); // float float
+                        file.Write(part.Position.X); file.Write(part.Position.Y); // float float
+                        file.Write(part.Scale); // float
+                        file.Write(part.Rotation); // float
+                        file.Write(part.TexID); // int
+                        file.Write(part.SourceRect.X); file.Write(part.SourceRect.Y); file.Write(part.SourceRect.Width); file.Write(part.SourceRect.Height); // int int int int
+                        file.Write(part.DestRect.X); file.Write(part.DestRect.Y); file.Write(part.DestRect.Width); file.Write(part.DestRect.Height); // int int int int
+                    }
+                }
+            }
+            file.Close();
+        }
+
+        void LoadAnimation()
+        {
+            BinaryReader file = new BinaryReader(File.Open(@"Content/data/" + animGroup.GroupName + ".anim", FileMode.Open));
+
+            AnimationGroup newAnimGroup = new AnimationGroup();
+            newAnimGroup.Animations = new Animation[file.ReadInt32()];
+            for (int i = 0; i < newAnimGroup.Animations.Length; i++)
+            {
+                Animation newAnim = new Animation(pixelTexture);
+                newAnim.AnimationName = file.ReadString();
+                newAnim.Bounds = new Rectangle(file.ReadInt32(), file.ReadInt32(), file.ReadInt32(), file.ReadInt32());
+                newAnim.Frames = new Frame[file.ReadInt32()];
+
+                for (int j = 0; j < newAnim.Frames.Length; j++)
+                {
+                    Frame newFrame = new Frame();
+                    newFrame.Ticks = file.ReadInt32();
+                    newFrame.Parts = new Part[file.ReadInt32()];
+
+                    for (int p = 0; p < newFrame.Parts.Length; p++)
+                    {
+                        Part newPart = new Part();
+                        newPart.ID = file.ReadInt32();
+                        newPart.IsFlipped = file.ReadBoolean();
+                        newPart.Origin = new Vector2(file.ReadSingle(), file.ReadSingle());
+                        newPart.WorldOrigin = new Vector2(file.ReadSingle(), file.ReadSingle());
+                        newPart.Position = new Vector2(file.ReadSingle(), file.ReadSingle());
+                        newPart.Scale = file.ReadSingle();
+                        newPart.Rotation = file.ReadSingle();
+                        newPart.Texture = partTextures[file.ReadInt32()];
+                        newPart.SourceRect = new Rectangle(file.ReadInt32(), file.ReadInt32(), file.ReadInt32(), file.ReadInt32());
+                        newPart.DestRect = new Rectangle(file.ReadInt32(), file.ReadInt32(), file.ReadInt32(), file.ReadInt32());
+                        newFrame.Parts[p] = newPart;
+                    }
+                    newAnim.Frames[j] = newFrame;
+                }
+                newAnimGroup.Animations[i] = newAnim;
+            }
+            file.Close();
+            ResetAnimGroup(newAnimGroup);
+        }
+
+        void ResetAnimGroup(AnimationGroup newAnimGroup)
+        {
+            animGroup = newAnimGroup;
+            currentAnimation = newAnimGroup.Animations[0];
+            currentFrame = newAnimGroup.Animations[0].Frames[0];
+        }
+
+        TextField AddNewTextField(Vector2 textPosition)
+        {
+            TextField newTextField = new TextField(consolas, textPosition, "", 12, pixelTexture);
+            return newTextField;
         }
 
         void TweenFrames(Frame startFrame, Frame endFrame)
@@ -317,7 +573,7 @@ namespace ProjectSkelAnimator
                         }
                     }
                 }
-                animation.InsertFrame(thisFrame);
+                currentAnimation.InsertFrame(thisFrame);
             }
         }
 
@@ -333,24 +589,35 @@ namespace ProjectSkelAnimator
             partsPalette.Draw(spriteBatch);
             if (isOnionSkin)
             {
-                if (animation.CurrentFrameIndex - 1 > -1)
+                if (currentAnimation.CurrentFrameIndex - 1 > -1)
                 {
-                    animation.Frames[animation.CurrentFrameIndex - 1].Draw(spriteBatch, Color.White * 0.2f);
+                    currentAnimation.Frames[currentAnimation.CurrentFrameIndex - 1].Draw(spriteBatch, Color.White * 0.2f);
                 }
             }
-            currentFrame.Draw(spriteBatch);
-            animation.Draw(spriteBatch);
-            spriteBatch.DrawString(consolas, frameName + animation.CurrentFrameIndex, new Vector2(16,48), Color.White);
-            spriteBatch.DrawString(consolas, frameTicks + currentFrame.Ticks, new Vector2(16, 64), Color.White);
-            if (currentFrame.SelectedPart != null)
-            { spriteBatch.DrawString(consolas, "Selected Part ID: " + currentFrame.SelectedPart.ID.ToString(), new Vector2(16, 80), Color.White); }
+            if (currentFrame != null) { currentFrame.Draw(spriteBatch); }
+            currentAnimation.Draw(spriteBatch);
+
+            spriteBatch.DrawString(consolas, frameName + currentAnimation.CurrentFrameIndex, new Vector2(16,48), Color.White);
+            if (currentFrame != null) { spriteBatch.DrawString(consolas, frameTicks + currentFrame.Ticks, new Vector2(16, 64), Color.White); }
+
+            if (currentFrame != null)
+            { if (currentFrame.SelectedPart != null) { spriteBatch.DrawString(consolas, "Selected Part ID: " + currentFrame.SelectedPart.ID.ToString(), new Vector2(16, 80), Color.White); } }
             spriteBatch.DrawString(consolas, "Cursor: X=" + cursor.MouseState.X.ToString() + " Y=" + cursor.MouseState.Y.ToString(), new Vector2(GraphicsDevice.Viewport.Width - 192, GraphicsDevice.Viewport.Height - 80), Color.White);
-            textBoundsX.Draw(spriteBatch);
-            textBoundsY.Draw(spriteBatch);
-            textBoundsWidth.Draw(spriteBatch);
-            textBoundsHeight.Draw(spriteBatch);
-            textTweenFrames.Draw(spriteBatch);
+
+            textAnimGroupName.Draw(spriteBatch);
+
+            foreach (TextField text in animGroupTextFields)
+            {
+                if (text != null) { text.Draw(spriteBatch); }
+            }
+
+            foreach (TextField text in textFields)
+            {
+                if (text != null) { text.Draw(spriteBatch); }
+            }
             buttonPanel.Draw(spriteBatch);
+            eyeButtonPanel.Draw(spriteBatch);
+
             cursor.Draw(spriteBatch); // cursor should be drawn after everything else.
 
             base.Draw(gameTime);

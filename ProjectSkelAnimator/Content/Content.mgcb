@@ -68,3 +68,8 @@
 /processorParam:TextureFormat=Compressed
 /build:consolas.spritefont
 
+#begin data/File.xml
+/importer:XmlImporter
+/processor:PassThroughProcessor
+/build:data/File.xml
+

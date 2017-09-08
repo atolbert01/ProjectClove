@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace ProjectSkelAnimator
 {
@@ -9,6 +10,7 @@ namespace ProjectSkelAnimator
     /// </summary>
     class Animation
     {
+        public string AnimationName { get; set; }
         public Rectangle Bounds { get; set; }
         public Part[] Parts { get; set; }
         public Frame[] Frames { get; set; }
@@ -24,17 +26,24 @@ namespace ProjectSkelAnimator
             Parts = new Part[0];
         }
 
+        public Animation() { }
+
         public void Update(Cursor cursor)
         {
             //Bounds = new Rectangle(cursor.BoundsRect.X, cursor.BoundsRect.Y, cursor.BoundsRect.Width, cursor.BoundsRect.Height);
-            
-            if (cursor.BoundsRect.Width > 0)
+            if (cursor.State == CursorState.AdjustBounds)
             {
-                Bounds = cursor.BoundsRect;
-            }
-            else
-            {
-                Bounds = new Rectangle(0, 0, 0, 0);
+                if (cursor.MouseState.LeftButton == ButtonState.Pressed)
+                {
+                    if (cursor.BoundsRect.Width > 0)
+                    {
+                        Bounds = cursor.BoundsRect;
+                    }
+                    //else
+                    //{
+                    //    Bounds = new Rectangle(0, 0, 0, 0);
+                    //}
+                }
             }
             //if (Frames.Length > 0)
             //{

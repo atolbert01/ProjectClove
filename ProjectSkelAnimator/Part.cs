@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
@@ -8,6 +9,7 @@ namespace ProjectSkelAnimator
     class Part
     {
         public int ID { get; set; }
+        public int TexID { get; set; }
         public Part Parent { get; set; }
         public Texture2D Texture { get; set; }
         public Rectangle SourceRect { get; set; }
@@ -17,34 +19,43 @@ namespace ProjectSkelAnimator
         public Vector2 Origin { get; set; }
         public Vector2 WorldOrigin { get; set; }
         public Vector2 Position { get; set; }
+        public bool IsFlipped { get; set; }
 
         public Color Tint = Color.White;
         public PartState State = PartState.Preview;
         public bool WasChanged = false;
-        
+
+        public Part() { }
+
         public Part(int id, Texture2D texture, Rectangle sourceRect, Rectangle destRect)
         {
             ID = id;
-            this.Texture = texture;
-            this.DestRect = destRect;
-            this.SourceRect = sourceRect;
+            Texture = texture;
+            string texName = Texture.Name;
+            TexID = int.Parse(texName.Substring(texName.Length - 1, 1));
+            DestRect = destRect;
+            SourceRect = sourceRect;
             Origin = new Vector2(DestRect.Width / 2, DestRect.Height / 2);
             Position = new Vector2(DestRect.X, DestRect.Y);
             WorldOrigin = new Vector2(DestRect.X + (DestRect.Width / 2), DestRect.Y + (DestRect.Height / 2));
             Scale = 1f;
             Rotation = 0f;
+            IsFlipped = false;
         }
 
         public Part(Texture2D texture, Rectangle sourceRect, Rectangle destRect)
         {
-            this.Texture = texture;
-            this.DestRect = destRect;
-            this.SourceRect = sourceRect;
+            Texture = texture;
+            string texName = Texture.Name;
+            TexID = int.Parse(texName.Substring(texName.Length - 1, 1));
+            DestRect = destRect;
+            SourceRect = sourceRect;
             Origin = new Vector2(DestRect.Width / 2, DestRect.Height / 2);
             Position = new Vector2(DestRect.X, DestRect.Y);
             WorldOrigin = new Vector2(DestRect.X + (DestRect.Width / 2), DestRect.Y + (DestRect.Height / 2));
             Scale = 1f;
             Rotation = 0f;
+            IsFlipped = false;
         }
 
         public void Update(Cursor cursor)
@@ -85,13 +96,13 @@ namespace ProjectSkelAnimator
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Texture, Position, SourceRect, Tint, Rotation, Origin, Scale, SpriteEffects.None, 0);
+            spriteBatch.Draw(Texture, Position, SourceRect, Tint, Rotation, Origin, Scale, (IsFlipped ? SpriteEffects.FlipHorizontally : SpriteEffects.None), 0);
         }
 
         public void Draw(SpriteBatch spriteBatch, Color color)
         {
             Tint = color;
-            spriteBatch.Draw(Texture, Position, SourceRect, Tint, Rotation, Origin, Scale, SpriteEffects.None, 0);
+            spriteBatch.Draw(Texture, Position, SourceRect, Tint, Rotation, Origin, Scale, (IsFlipped ? SpriteEffects.FlipHorizontally : SpriteEffects.None), 0);
         }
 
         public void SetParent(Part parent)

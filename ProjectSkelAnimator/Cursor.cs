@@ -89,7 +89,7 @@ namespace ProjectSkelAnimator
                 }
                 if (State != CursorState.TextEdit)
                 {
-                    if (KeyState.IsKeyDown(Keys.A)) { State = CursorState.Arrow; }
+                    if (KeyState.IsKeyDown(Keys.A) || MouseState.RightButton == ButtonState.Pressed) { State = CursorState.Arrow; }
                     else if (KeyState.IsKeyDown(Keys.F)) { State = CursorState.OpenHand; }
                     else if (KeyState.IsKeyDown(Keys.D)) { State = CursorState.Pencil; }
                     else if (KeyState.IsKeyDown(Keys.E)) { State = CursorState.Eraser; }
@@ -105,6 +105,8 @@ namespace ProjectSkelAnimator
             if (KeyState.IsKeyDown(Keys.Left) && PrevKeyState.IsKeyUp(Keys.Left)) { SelectedPart = Frame.PreviousPart(); }
 
             if (KeyState.IsKeyDown(Keys.Tab) && PrevKeyState.IsKeyUp(Keys.Tab)) { showHelp = !showHelp; }
+
+            if (KeyState.IsKeyDown(Keys.X) && PrevKeyState.IsKeyUp(Keys.X)) { SelectedPart.IsFlipped = !SelectedPart.IsFlipped; }
 
             switch (State)
             {
