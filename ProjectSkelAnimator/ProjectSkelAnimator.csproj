@@ -61,7 +61,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Animation.cs" />
-    <Compile Include="AnimationSet.cs" />
+    <Compile Include="AnimationGroup.cs" />
     <Compile Include="Button.cs" />
     <Compile Include="Cursor.cs" />
     <Compile Include="Frame.cs" />

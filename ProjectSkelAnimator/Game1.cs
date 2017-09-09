@@ -2,9 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Storage;
 using System.IO;
-using System.Xml.Serialization;
 
 namespace ProjectSkelAnimator
 {
@@ -51,11 +49,8 @@ namespace ProjectSkelAnimator
         TextField textBoundsHeight;
         TextField textTweenFrames;
         TextField textAnimGroupName;
-        TextField textNewAnimName;
         TextField textScript;
         KeyboardState KeyState;
-        StorageContainer container;
-        StorageDevice device;
         string frameName = "Frame: ";
         string frameTicks = "Ticks: ";
         bool isOnionSkin = false;
@@ -101,8 +96,7 @@ namespace ProjectSkelAnimator
             transparentTexture = Content.Load<Texture2D>("gfx/transparency");
             cursorTexture = Content.Load<Texture2D>("gfx/cursors");
             consolas = Content.Load<SpriteFont>("consolas");
-
-            animGroupTextFields = new TextField[32];
+            
             textFields = new TextField[32];
 
             Vector2 animGroupTextPos = new Vector2(16, 128);
@@ -111,7 +105,7 @@ namespace ProjectSkelAnimator
             for (int i = 0; i < animGroup.Animations.Length; i++)
             {
                 Vector2 textPosition = new Vector2(animGroupTextPos.X + 20, 152 + ((consolas.LineSpacing + 2) * (i+ 1)));
-                animGroupTextFields[i] = AddNewTextField(textPosition);
+                animGroupTextFields = AddNewTextField(animGroupTextFields, textPosition);
             }
             textFields[0] = textBoundsX = new TextField(consolas, new Vector2(16, GraphicsDevice.Viewport.Height - 80), currentAnimation.Bounds.X.ToString(), "Bounds X:", 12, pixelTexture);
             textFields[1] = textBoundsY = new TextField(consolas, new Vector2(128, GraphicsDevice.Viewport.Height - 80), currentAnimation.Bounds.Y.ToString(), "Bounds Y:", 12, pixelTexture);
@@ -151,6 +145,17 @@ namespace ProjectSkelAnimator
             buttonPanel = new ButtonPanel(buttons);
             buttonPanel.Load();
 
+            LoadEyeButtons();
+
+            int textureCounter = 0;
+            while (textureCounter != -1){textureCounter = LoadPartTextures(textureCounter);}
+
+            partsPalette = new PartsPalette(partTextures, transparentTexture, graphics);
+            partsPalette.Load();
+        }
+
+        void LoadEyeButtons()
+        {
             Button[] eyeButtons = new Button[animGroupTextFields.Length];
             for (int i = 0; i < eyeButtons.Length; i++)
             {
@@ -161,12 +166,6 @@ namespace ProjectSkelAnimator
             }
             eyeButtonPanel = new ButtonPanel(eyeButtons);
             eyeButtonPanel.Load();
-
-            int textureCounter = 0;
-            while (textureCounter != -1){textureCounter = LoadPartTextures(textureCounter);}
-
-            partsPalette = new PartsPalette(partTextures, transparentTexture, graphics);
-            partsPalette.Load();
         }
 
         /// <summary>
@@ -215,16 +214,19 @@ namespace ProjectSkelAnimator
             if (nextButton.IsClicked)
             {
                 currentAnimation.NextFrame();
+                textScript.Text = currentAnimation.Frames[currentAnimation.CurrentFrameIndex].Script;
             }
             else if (prevButton.IsClicked)
             {
                 currentAnimation.PreviousFrame();
+                textScript.Text = currentAnimation.Frames[currentAnimation.CurrentFrameIndex].Script;
             }
             else if (playButton.IsClicked)
             {
                 if (currentFrame.CurrentTick == currentFrame.Ticks)
                 {
                     currentAnimation.NextFrame();
+                    textScript.Text = currentAnimation.Frames[currentAnimation.CurrentFrameIndex].Script;
                 }
                 currentFrame.CurrentTick++;
             }
@@ -242,15 +244,18 @@ namespace ProjectSkelAnimator
                 if (currentAnimation.Frames.Length > 1)
                 {
                     currentAnimation.AddFrame(new Frame(newFrame));
+                    textScript.Text = currentAnimation.Frames[currentAnimation.CurrentFrameIndex].Script;
                 }
                 else
                 {
                     currentAnimation.InsertFrame(new Frame(newFrame));
+                    textScript.Text = currentAnimation.Frames[currentAnimation.CurrentFrameIndex].Script;
                 }
             }
             else if (deleteFrameButton.IsClicked)
             {
                 if (currentAnimation.Frames.Length > 1) { currentAnimation.RemoveFrame(currentFrame); } // There will always be at least 1 frame.
+                textScript.Text = currentAnimation.Frames[currentAnimation.CurrentFrameIndex].Script;
             }
             else if (onionSkinButton.IsClicked)
             {
@@ -279,12 +284,26 @@ namespace ProjectSkelAnimator
 
             if (addAnimButton.IsClicked)
             {
-                // animGroupTextFields is effectively 1 indexed since the first text field is the group name
                 animGroup.AddAnimation(new Animation(pixelTexture));
-                animGroupTextFields[animGroup.Animations.Length - 1] = AddNewTextField(new Vector2(36, 152 + ((consolas.LineSpacing + 2) * animGroup.Animations.Length)));
-                eyeButtonPanel.Buttons[animGroup.Animations.Length - 1] = new EyeButton(cursorTexture, new Rectangle((int)animGroupTextFields[animGroup.Animations.Length - 1].Position.X - 20, (int)animGroupTextFields[animGroup.Animations.Length - 1].Position.Y - 1, 16, 16));
+                animGroupTextFields = AddNewTextField(animGroupTextFields, new Vector2(36, 152 + ((consolas.LineSpacing + 2) * animGroup.Animations.Length)));
+                if (animGroupTextFields[animGroup.Animations.Length - 1] != null)
+                {
+                    //eyeButtonPanel.Buttons[animGroup.Animations.Length - 1] = new EyeButton(cursorTexture, new Rectangle((int)animGroupTextFields[animGroup.Animations.Length - 1].Position.X - 20, (int)animGroupTextFields[animGroup.Animations.Length - 1].Position.Y - 1, 16, 16));
+                    LoadEyeButtons();
+                }
+                //LoadEyeButtons();
                 //eyeButtonPanel.Buttons[animGroup.Animations.Length] = new MinusTicksButton(cursorTexture, new Rectangle((int)animGroupTextFields[animGroup.Animations.Length].Position.X + (int)animGroupTextFields[animGroup.Animations.Length].Bounds.Width, (int)animGroupTextFields[animGroup.Animations.Length].Position.Y - 1, 16, 16));
-                eyeButtonPanel.Load();
+                //eyeButtonPanel.Load();
+            }
+
+            if (removeAnimButton.IsClicked)
+            {
+                if (animGroup.Animations.Length - 1 > -1)
+                {
+                    animGroup.RemoveAnimation(animGroup.Animations[animGroup.Animations.Length - 1]);
+                    animGroupTextFields = RemoveTextField(animGroupTextFields);
+                    LoadEyeButtons();
+                }
             }
 
             if (saveButton.IsClicked)
@@ -375,9 +394,10 @@ namespace ProjectSkelAnimator
                 animGroup.GroupName = textAnimGroupName.Text;
             }
 
-            if (textScript.State == TextState.Edit && textScript.PrevState == TextState.None)
+            if (textScript.State == TextState.None && textScript.PrevState == TextState.Edit)
             {
-                currentFrame.Script = textScript.Text;
+                currentAnimation.Frames[currentAnimation.CurrentFrameIndex].Script = textScript.Text;
+                textScript.State = TextState.None;
             }
 
             if (KeyState.IsKeyDown(Keys.NumPad4))
@@ -432,7 +452,6 @@ namespace ProjectSkelAnimator
                     }
                 }
             }
-
             base.Update(gameTime);
         }
 
@@ -477,6 +496,7 @@ namespace ProjectSkelAnimator
             BinaryReader file = new BinaryReader(File.Open(@"Content/data/" + animGroup.GroupName + ".anim", FileMode.Open));
 
             AnimationGroup newAnimGroup = new AnimationGroup();
+            newAnimGroup.GroupName = animGroup.GroupName;
             newAnimGroup.Animations = new Animation[file.ReadInt32()];
             for (int i = 0; i < newAnimGroup.Animations.Length; i++)
             {
@@ -517,24 +537,76 @@ namespace ProjectSkelAnimator
         void ResetAnimGroup(AnimationGroup newAnimGroup)
         {
             animGroup = newAnimGroup;
-            currentAnimation = newAnimGroup.Animations[0];
-            currentFrame = newAnimGroup.Animations[0].Frames[0];
+            animGroup.CurrentAnimation = newAnimGroup.Animations[0];
+
+            foreach (Animation anim in animGroup.Animations)
+            {
+                anim.CurrentFrame = anim.Frames[0];
+            }
+            currentAnimation = animGroup.CurrentAnimation;
+            currentFrame = animGroup.CurrentAnimation.CurrentFrame;
+            currentAnimation.CurrentFrameIndex = 0;
+
+            animGroupTextFields = new TextField[animGroup.Animations.Length];
+            Vector2 animGroupTextPos = new Vector2(16, 128);
+
+            animGroupTextFields = new TextField[0];
+
+            for (int i = 0; i < animGroup.Animations.Length; i++)
+            {
+                Vector2 textPosition = new Vector2(animGroupTextPos.X + 20, 152 + ((consolas.LineSpacing + 2) * (i + 1)));
+                animGroupTextFields = AddNewTextField(animGroupTextFields, textPosition);
+            }
+            for (int i = 0; i < animGroup.Animations.Length; i++)
+            {
+                animGroupTextFields[i].Text = animGroup.Animations[i].AnimationName;
+            }
+            LoadEyeButtons();
         }
 
-        TextField AddNewTextField(Vector2 textPosition)
+        TextField[] AddNewTextField(TextField[] textFields, Vector2 textPosition)
         {
+            TextField[] newTextFields;
             TextField newTextField = new TextField(consolas, textPosition, "", 12, pixelTexture);
-            return newTextField;
+            if (textFields != null)
+            {
+                newTextFields = new TextField[textFields.Length + 1];
+                for (int i = 0; i < textFields.Length; i++)
+                {
+                    newTextFields[i] = textFields[i];
+                }
+            }
+            else
+            {
+                newTextFields = new TextField[1];
+            }
+            newTextFields[newTextFields.Length - 1] = newTextField;
+            return newTextFields;
+        }
+
+        TextField[] RemoveTextField(TextField[] textFields)
+        {
+            if (textFields.Length - 1 > -1)
+            {
+                TextField[] newTextFields = new TextField[textFields.Length - 1];
+                for (int i = 0; i < newTextFields.Length; i++)
+                {
+                    newTextFields[i] = textFields[i];
+                }
+                return newTextFields;
+            }
+            else
+            {
+                return textFields;
+            }
         }
 
         void TweenFrames(Frame startFrame, Frame endFrame)
         {
             tweenCount = Int32.Parse(textTweenFrames.Text);
-            //Frame thisFrame = new Frame();
             for (int i = 1; i < tweenCount; i++)
             {
                 Frame thisFrame = new Frame();
-                //Frame thisFrame = animation.InsertFrame();
                 foreach (Part startPart in startFrame.Parts)
                 {
                     foreach (Part endPart in endFrame.Parts)

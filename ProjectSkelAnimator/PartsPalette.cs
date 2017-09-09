@@ -47,7 +47,9 @@ namespace ProjectSkelAnimator
             parts = new Part[sourceRectangles.Length];
             for (int i = 0; i < sourceRectangles.Length; i++)
             {
-                parts[i] = new Part(sourceRectangles[i].Texture, sourceRectangles[i].SourceRect, new Rectangle(i * (gridSize / 2) + (gridSize / 2), graphics.GraphicsDevice.Viewport.Bounds.Height - (gridSize/2), gridSize/2, gridSize/2));
+                Part newPart = new Part(sourceRectangles[i].Texture, sourceRectangles[i].SourceRect, new Rectangle(i * (gridSize / 2) + (gridSize / 2), graphics.GraphicsDevice.Viewport.Bounds.Height - (gridSize / 2), gridSize / 2, gridSize / 2));
+                newPart.State = PartState.Preview;
+                parts[i] = newPart;
             }
 
         }

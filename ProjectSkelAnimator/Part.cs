@@ -22,7 +22,7 @@ namespace ProjectSkelAnimator
         public bool IsFlipped { get; set; }
 
         public Color Tint = Color.White;
-        public PartState State = PartState.Preview;
+        public PartState State = PartState.Idle;
         public bool WasChanged = false;
 
         public Part() { }

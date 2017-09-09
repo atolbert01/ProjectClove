@@ -38,7 +38,7 @@ namespace ProjectSkelAnimator
                 Parts[i].State = originalFrame.Parts[i].State;
             }
             SelectedIndex = originalFrame.SelectedIndex;
-            if (Parts != null)
+            if (Parts.Length > 0)
             {
                 SelectedPart = Parts[SelectedIndex];
             }
