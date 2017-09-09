@@ -15,6 +15,7 @@ namespace ProjectSkelAnimator
         public Part[] Parts { get; set; }
         public Frame[] Frames { get; set; }
         public Texture2D PixelTexture { get; set; }
+        public bool DrawBounds { get; set; }
         public Frame CurrentFrame;
         public int CurrentFrameIndex = 0;
         public int SelectedPartIndex = 0;
@@ -24,9 +25,13 @@ namespace ProjectSkelAnimator
             Bounds = new Rectangle(0,0,0,0);
             Frames = new Frame[0];
             Parts = new Part[0];
+            DrawBounds = true;
         }
 
-        public Animation() { }
+        public Animation()
+        {
+            DrawBounds = true;
+        }
 
         public void Update(Cursor cursor)
         {
@@ -45,6 +50,8 @@ namespace ProjectSkelAnimator
                     //}
                 }
             }
+
+            //if (cursor.KeyState.IsKeyDown(Keys.Q) && cursor.PrevKeyState.IsKeyUp(Keys.Q)) { DrawBounds = !DrawBounds; }
             //if (Frames.Length > 0)
             //{
             //    CurrentFrame = Frames[CurrentIndex];
@@ -198,7 +205,7 @@ namespace ProjectSkelAnimator
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(PixelTexture, Bounds, Color.Black * 0.33f);
+            if (DrawBounds) { spriteBatch.Draw(PixelTexture, Bounds, Color.Black * 0.33f); }
         }
     }
 }

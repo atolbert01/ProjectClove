@@ -13,11 +13,10 @@ namespace ProjectSkelAnimator
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Camera2D camera;
         SpriteFont consolas;
         Texture2D[] partTextures;
-        Texture2D cursorTexture;
-        Texture2D transparentTexture;
-        Texture2D pixelTexture;
+        Texture2D cursorTexture, transparentTexture, pixelTexture;
         PartsPalette partsPalette;
         Frame currentFrame;
         Cursor cursor;
@@ -27,7 +26,7 @@ namespace ProjectSkelAnimator
         PauseButton pauseButton;
         NextButton nextButton;
         PrevButton prevButton;
-        NewFrameButton newFrameButton;
+        NewFrameButton newFrameButton, dupAnimButton;
         DeleteFrameButton deleteFrameButton;
         PlusTicksButton plusTicksButton, addAnimButton;
         OnionSkinButton onionSkinButton;
@@ -41,16 +40,9 @@ namespace ProjectSkelAnimator
         RightButton paletteRightButton;
         AnimationGroup animGroup;
         Animation currentAnimation;
-        TextField[] animGroupTextFields;
-        TextField[] textFields;
-        TextField textBoundsX;
-        TextField textBoundsY;
-        TextField textBoundsWidth;
-        TextField textBoundsHeight;
-        TextField textTweenFrames;
-        TextField textAnimGroupName;
-        TextField textScript;
-        KeyboardState KeyState;
+        TextField[] textFields, animGroupTextFields;
+        TextField textBoundsX, textBoundsY, textBoundsWidth, textBoundsHeight, textTweenFrames, textAnimGroupName, textScript;
+        KeyboardState KeyState, PrevKeyState;
         string frameName = "Frame: ";
         string frameTicks = "Ticks: ";
         bool isOnionSkin = false;
@@ -82,6 +74,10 @@ namespace ProjectSkelAnimator
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            camera = new Camera2D();
+            camera.Position = new Vector2(400, 240);
+            camera.Zoom = 1.0f;
 
             partTextures = new Texture2D[32];
 
@@ -126,6 +122,7 @@ namespace ProjectSkelAnimator
 
             addAnimButton = new PlusTicksButton(cursorTexture, new Rectangle(96, 144, 16, 16));
             removeAnimButton = new MinusTicksButton(cursorTexture, new Rectangle(72, 144, 16, 16));
+            dupAnimButton = new NewFrameButton(cursorTexture, new Rectangle(120, 144, 16, 16));
             animUpButton = new UpButton(cursorTexture, new Rectangle( 40, 144, 16, 16));
             animDownButton = new DownButton(cursorTexture, new Rectangle(16, 144, 16, 16));
 
@@ -141,7 +138,7 @@ namespace ProjectSkelAnimator
             saveButton = new SaveButton(cursorTexture, new Rectangle((graphics.GraphicsDevice.Viewport.Width) - 64, 16, 24, 24));
             loadButton = new LoadButton(cursorTexture, new Rectangle((graphics.GraphicsDevice.Viewport.Width) - 32, 16, 24, 24));
 
-            Button[] buttons = { prevButton, pauseButton, playButton, nextButton, newFrameButton, deleteFrameButton, plusTicksButton, minusTicksButton, tweenButton, saveButton, onionSkinButton, loadButton, addAnimButton, removeAnimButton, animUpButton, animDownButton, paletteLeftButton, paletteRightButton};
+            Button[] buttons = { prevButton, pauseButton, playButton, nextButton, newFrameButton, deleteFrameButton, plusTicksButton, minusTicksButton, tweenButton, saveButton, onionSkinButton, loadButton, addAnimButton, removeAnimButton, dupAnimButton, animUpButton, animDownButton, paletteLeftButton, paletteRightButton};
             buttonPanel = new ButtonPanel(buttons);
             buttonPanel.Load();
 
@@ -211,6 +208,7 @@ namespace ProjectSkelAnimator
             cursor.Update();
             buttonPanel.Update(cursor);
             eyeButtonPanel.Update(cursor);
+
             if (nextButton.IsClicked)
             {
                 currentAnimation.NextFrame();
@@ -288,12 +286,24 @@ namespace ProjectSkelAnimator
                 animGroupTextFields = AddNewTextField(animGroupTextFields, new Vector2(36, 152 + ((consolas.LineSpacing + 2) * animGroup.Animations.Length)));
                 if (animGroupTextFields[animGroup.Animations.Length - 1] != null)
                 {
-                    //eyeButtonPanel.Buttons[animGroup.Animations.Length - 1] = new EyeButton(cursorTexture, new Rectangle((int)animGroupTextFields[animGroup.Animations.Length - 1].Position.X - 20, (int)animGroupTextFields[animGroup.Animations.Length - 1].Position.Y - 1, 16, 16));
                     LoadEyeButtons();
                 }
-                //LoadEyeButtons();
-                //eyeButtonPanel.Buttons[animGroup.Animations.Length] = new MinusTicksButton(cursorTexture, new Rectangle((int)animGroupTextFields[animGroup.Animations.Length].Position.X + (int)animGroupTextFields[animGroup.Animations.Length].Bounds.Width, (int)animGroupTextFields[animGroup.Animations.Length].Position.Y - 1, 16, 16));
-                //eyeButtonPanel.Load();
+            }
+
+            if (dupAnimButton.IsClicked)
+            {
+                Animation newAnim = new Animation(pixelTexture);
+                newAnim.Bounds = new Rectangle(animGroup.CurrentAnimation.Bounds.X, animGroup.CurrentAnimation.Bounds.Y, animGroup.CurrentAnimation.Bounds.Width, animGroup.CurrentAnimation.Bounds.Height);
+                foreach (Frame frame in animGroup.CurrentAnimation.Frames)
+                {
+                    newAnim.AddFrame(new Frame(frame));
+                }
+                animGroup.AddAnimation(newAnim);
+                animGroupTextFields = AddNewTextField(animGroupTextFields, new Vector2(36, 152 + ((consolas.LineSpacing + 2) * animGroup.Animations.Length)));
+                if (animGroupTextFields[animGroup.Animations.Length - 1] != null)
+                {
+                    LoadEyeButtons();
+                }
             }
 
             if (removeAnimButton.IsClicked)
@@ -402,6 +412,7 @@ namespace ProjectSkelAnimator
 
             if (KeyState.IsKeyDown(Keys.NumPad4))
             {
+                //camera.Position += new Vector2(-4, 0);
                 foreach (Frame frame in currentAnimation.Frames)
                 {
                     foreach (Part part in frame.Parts)
@@ -412,6 +423,7 @@ namespace ProjectSkelAnimator
             }
             else if (KeyState.IsKeyDown(Keys.NumPad6))
             {
+                //camera.Position += new Vector2(4, 0);
                 foreach (Frame frame in currentAnimation.Frames)
                 {
                     foreach (Part part in frame.Parts)
@@ -423,6 +435,7 @@ namespace ProjectSkelAnimator
 
             if (KeyState.IsKeyDown(Keys.NumPad8))
             {
+                //camera.Position += new Vector2(0, -4);
                 foreach (Frame frame in currentAnimation.Frames)
                 {
                     foreach (Part part in frame.Parts)
@@ -433,6 +446,7 @@ namespace ProjectSkelAnimator
             }
             else if (KeyState.IsKeyDown(Keys.NumPad2))
             {
+                //camera.Position += new Vector2(0, 4);
                 foreach (Frame frame in currentAnimation.Frames)
                 {
                     foreach (Part part in frame.Parts)
@@ -441,6 +455,10 @@ namespace ProjectSkelAnimator
                     }
                 }
             }
+            if (KeyState.IsKeyDown(Keys.OemPlus) && PrevKeyState.IsKeyUp(Keys.OemPlus)) { camera.Zoom += 0.25f; }
+            if (KeyState.IsKeyDown(Keys.OemMinus) && PrevKeyState.IsKeyUp(Keys.OemMinus)) { camera.Zoom -= 0.25f; }
+            if (KeyState.IsKeyDown(Keys.Q) && PrevKeyState.IsKeyUp(Keys.Q)) { animGroup.CurrentAnimation.DrawBounds = !animGroup.CurrentAnimation.DrawBounds; }
+
 
             for (int i = 0; i < animGroup.Animations.Length; i++)
             {
@@ -452,6 +470,7 @@ namespace ProjectSkelAnimator
                     }
                 }
             }
+            if (KeyState != null) { PrevKeyState = KeyState; }
             base.Update(gameTime);
         }
 
@@ -522,6 +541,7 @@ namespace ProjectSkelAnimator
                         newPart.Scale = file.ReadSingle();
                         newPart.Rotation = file.ReadSingle();
                         newPart.Texture = partTextures[file.ReadInt32()];
+                        newPart.TexID = Int32.Parse(newPart.Texture.Name.Substring(newPart.Texture.Name.Length - 1, 1));
                         newPart.SourceRect = new Rectangle(file.ReadInt32(), file.ReadInt32(), file.ReadInt32(), file.ReadInt32());
                         newPart.DestRect = new Rectangle(file.ReadInt32(), file.ReadInt32(), file.ReadInt32(), file.ReadInt32());
                         newFrame.Parts[p] = newPart;
@@ -615,7 +635,7 @@ namespace ProjectSkelAnimator
                         {
                             Part newPart = new Part(startPart.ID, startPart.Texture, startPart.SourceRect, endPart.DestRect);
                             newPart.Position = endPart.Position;
-                            newPart.Rotation = endPart.Rotation;
+                            newPart.Rotation = startPart.Rotation;
 
                             if (startPart.Position != endPart.Position)
                             {
@@ -639,7 +659,14 @@ namespace ProjectSkelAnimator
 
                             if (startPart.Rotation != endPart.Rotation)
                             {
-                                newPart.Rotation = ((endPart.Rotation - startPart.Rotation) / tweenCount) * i;
+                                if (endPart.Rotation > startPart.Rotation)
+                                {
+                                    newPart.Rotation += ((endPart.Rotation - startPart.Rotation) / tweenCount) * i;
+                                }
+                                else
+                                {
+                                    newPart.Rotation -= ((startPart.Rotation - endPart.Rotation) / tweenCount) * i;
+                                }
                             }
                             thisFrame.AddPart(newPart);
                         }
@@ -656,7 +683,9 @@ namespace ProjectSkelAnimator
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch.Begin();
+            //spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, camera.Get_Transformation(GraphicsDevice));
+
 
             partsPalette.Draw(spriteBatch);
             if (isOnionSkin)

@@ -104,6 +104,9 @@ namespace ProjectSkelAnimator
             if (KeyState.IsKeyDown(Keys.Right) && PrevKeyState.IsKeyUp(Keys.Right)) { SelectedPart = Frame.NextPart(); }
             if (KeyState.IsKeyDown(Keys.Left) && PrevKeyState.IsKeyUp(Keys.Left)) { SelectedPart = Frame.PreviousPart(); }
 
+            if (MouseState.ScrollWheelValue < PrevMouseState.ScrollWheelValue) { SelectedPart = Frame.NextPart(); }
+            if (MouseState.ScrollWheelValue > PrevMouseState.ScrollWheelValue) { SelectedPart = Frame.PreviousPart(); }
+
             if (KeyState.IsKeyDown(Keys.Tab) && PrevKeyState.IsKeyUp(Keys.Tab)) { showHelp = !showHelp; }
 
             if (KeyState.IsKeyDown(Keys.X) && PrevKeyState.IsKeyUp(Keys.X)) { SelectedPart.IsFlipped = !SelectedPart.IsFlipped; }

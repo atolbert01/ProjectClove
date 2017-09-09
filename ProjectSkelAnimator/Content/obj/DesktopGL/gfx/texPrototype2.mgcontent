@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>D:/GameDev/.NET Projects/ProjectClove/ProjectSkelAnimator/Content/gfx/texPrototype1.png</SourceFile>
-  <SourceTime>2017-08-07T19:54:30.6397332-04:00</SourceTime>
-  <DestFile>D:/GameDev/.NET Projects/ProjectClove/ProjectSkelAnimator/Content/bin/DesktopGL/gfx/texPrototype1.xnb</DestFile>
-  <DestTime>2017-09-09T12:26:04.1862748-04:00</DestTime>
+  <SourceFile>D:/GameDev/.NET Projects/ProjectClove/ProjectSkelAnimator/Content/gfx/texPrototype2.png</SourceFile>
+  <SourceTime>2017-09-09T12:25:53.4759419-04:00</SourceTime>
+  <DestFile>D:/GameDev/.NET Projects/ProjectClove/ProjectSkelAnimator/Content/bin/DesktopGL/gfx/texPrototype2.xnb</DestFile>
+  <DestTime>2017-09-09T12:26:04.5522084-04:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2017-03-01T10:05:36-05:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

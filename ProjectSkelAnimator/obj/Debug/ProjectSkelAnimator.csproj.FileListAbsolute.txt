@@ -25,3 +25,4 @@ D:\GameDev\.NET Projects\ProjectClove\ProjectSkelAnimator\bin\DesktopGL\AnyCPU\D
 D:\GameDev\.NET Projects\ProjectClove\ProjectSkelAnimator\bin\DesktopGL\AnyCPU\Debug\Microsoft.Xna.Framework.Storage.xml
 D:\GameDev\.NET Projects\ProjectClove\ProjectSkelAnimator\bin\DesktopGL\AnyCPU\Debug\Microsoft.Xna.Framework.xml
 D:\GameDev\.NET Projects\ProjectClove\ProjectSkelAnimator\bin\DesktopGL\AnyCPU\Debug\Content\data\File.xnb
+D:\GameDev\.NET Projects\ProjectClove\ProjectSkelAnimator\bin\DesktopGL\AnyCPU\Debug\Content\gfx\texPrototype2.xnb
