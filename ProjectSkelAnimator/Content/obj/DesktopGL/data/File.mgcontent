@@ -3,7 +3,7 @@
   <SourceFile>D:/GameDev/.NET Projects/ProjectClove/ProjectSkelAnimator/Content/data/File.xml</SourceFile>
   <SourceTime>2017-03-01T10:05:30-05:00</SourceTime>
   <DestFile>D:/GameDev/.NET Projects/ProjectClove/ProjectSkelAnimator/Content/bin/DesktopGL/data/File.xnb</DestFile>
-  <DestTime>2017-09-09T12:26:04.5376917-04:00</DestTime>
+  <DestTime>2017-09-10T16:47:16.410646-04:00</DestTime>
   <Importer>XmlImporter</Importer>
   <ImporterTime>2017-03-01T10:05:36-05:00</ImporterTime>
   <Processor>PassThroughProcessor</Processor>

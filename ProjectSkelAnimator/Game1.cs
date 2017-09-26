@@ -203,6 +203,7 @@ namespace ProjectSkelAnimator
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             KeyState = Keyboard.GetState();
+            //currentAnimation = animGroup.CurrentAnimation;
             currentFrame = currentAnimation.CurrentFrame;
             cursor.Frame = currentFrame;
             cursor.Update();
@@ -263,7 +264,7 @@ namespace ProjectSkelAnimator
             {
                 if (currentAnimation.CurrentFrameIndex + 1 <= currentAnimation.Frames.Length)
                 {
-                    TweenFrames(currentFrame, currentAnimation.Frames[currentAnimation.CurrentFrameIndex + 1]);
+                    if (currentAnimation.CurrentFrameIndex + 1 < currentAnimation.Frames.Length) { TweenFrames(currentFrame, currentAnimation.Frames[currentAnimation.CurrentFrameIndex + 1]); }
                 }
             }
 

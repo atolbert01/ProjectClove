@@ -5,5 +5,6 @@
   <Config />
   <SourceFiles>
     <File>D:/GameDev/.NET Projects/ProjectClove/ProjectClove/Content/gfx/texPrototype.png</File>
+    <File>D:/GameDev/.NET Projects/ProjectClove/ProjectClove/Content/gfx/man1.png</File>
   </SourceFiles>
 </SourceFileCollection>

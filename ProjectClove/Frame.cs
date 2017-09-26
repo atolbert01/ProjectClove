@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
-public class Class1
+namespace ProjectClove
 {
-	public Class1()
-	{
-	}
+    class Frame
+    {
+        public int Ticks { get; set; }
+        public Part[] Parts { get; set; }
+    }
 }

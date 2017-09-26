@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using System.IO;
 
 namespace ProjectClove
 {
@@ -11,8 +12,6 @@ namespace ProjectClove
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        private Player player;
-        private Animation anim;
         
         public Game1()
         {
@@ -42,9 +41,8 @@ namespace ProjectClove
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             // TODO: use this.Content to load your game content here
-            Texture2D texPrototype = Content.Load<Texture2D>("gfx/texPrototype");
-            player = new Player(texPrototype);
-            //anim = new Animation(texPrototype, 8, 8);
+            Texture2D man1Tex = Content.Load<Texture2D>("gfx/man1");
+            Actor player = new Actor(ParseAnimFiles("man1", man1Tex));
         }
 
         /// <summary>
@@ -67,8 +65,6 @@ namespace ProjectClove
                 Exit();
 
             // TODO: Add your update logic here
-            //anim.Update();
-            player.Update();
             base.Update(gameTime);
         }
 
@@ -83,10 +79,62 @@ namespace ProjectClove
             //anim.Draw(spriteBatch, new Vector2(400, 200));
             spriteBatch.Begin();
 
-            player.Draw(spriteBatch);
+
             base.Draw(gameTime);
 
             spriteBatch.End();
+        }
+
+        /// <summary>
+        /// Reads in anim file data and returns Animation[]
+        /// </summary>
+        /// <param name="groupName"></param>
+        /// <param name="texture"></param>
+        /// <returns></returns>
+        Animation[] ParseAnimFiles(string groupName, Texture2D texture)
+        {
+            BinaryReader file = new BinaryReader(File.Open(@"Content/data/" + groupName + ".anim", FileMode.Open));
+
+            Animation[] animations = new Animation[file.ReadInt32()];
+            for (int i = 0; i < animations.Length; i++)
+            {
+                Animation newAnim = new Animation();
+                newAnim.AnimationName = file.ReadString();
+                newAnim.Bounds = new Rectangle(file.ReadInt32(), file.ReadInt32(), file.ReadInt32(), file.ReadInt32());
+                newAnim.Frames = new Frame[file.ReadInt32()];
+
+                for (int j = 0; j < newAnim.Frames.Length; j++)
+                {
+                    Frame newFrame = new Frame();
+                    newFrame.Ticks = file.ReadInt32();
+                    newFrame.Parts = new Part[file.ReadInt32()];
+
+                    for (int p = 0; p < newFrame.Parts.Length; p++)
+                    {
+                        Part newPart = new Part();
+                        newPart.ID = file.ReadInt32();
+                        newPart.IsFlipped = file.ReadBoolean();
+                        newPart.Origin = new Vector2(file.ReadSingle(), file.ReadSingle());
+                        newPart.WorldOrigin = new Vector2(file.ReadSingle(), file.ReadSingle());
+                        newPart.Position = new Vector2(file.ReadSingle(), file.ReadSingle());
+                        newPart.Scale = file.ReadSingle();
+                        newPart.Rotation = file.ReadSingle();
+
+                        //newPart.Texture = partTextures[file.ReadInt32()];
+                        file.ReadInt32();
+                        newPart.Texture = texture;
+
+                        //newPart.TexID = Int32.Parse(newPart.Texture.Name.Substring(newPart.Texture.Name.Length - 1, 1));
+                        newPart.SourceRect = new Rectangle(file.ReadInt32(), file.ReadInt32(), file.ReadInt32(), file.ReadInt32());
+                        newPart.DestRect = new Rectangle(file.ReadInt32(), file.ReadInt32(), file.ReadInt32(), file.ReadInt32());
+                        newFrame.Parts[p] = newPart;
+                    }
+                    newAnim.Frames[j] = newFrame;
+                }
+                animations[i] = newAnim;
+            }
+            file.Close();
+            return animations;
         }
     }
 }
