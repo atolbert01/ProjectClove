@@ -12,7 +12,7 @@ namespace ProjectClove
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        
+        Actor player;
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -42,7 +42,7 @@ namespace ProjectClove
             spriteBatch = new SpriteBatch(GraphicsDevice);
             // TODO: use this.Content to load your game content here
             Texture2D man1Tex = Content.Load<Texture2D>("gfx/man1");
-            Actor player = new Actor(ParseAnimFiles("man1", man1Tex));
+            player = new Actor(ParseAnimFiles("man1", man1Tex));
         }
 
         /// <summary>
@@ -64,7 +64,8 @@ namespace ProjectClove
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            player.Update();
+
             base.Update(gameTime);
         }
 
@@ -75,13 +76,11 @@ namespace ProjectClove
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            // TODO: Add your drawing code here
-            //anim.Draw(spriteBatch, new Vector2(400, 200));
             spriteBatch.Begin();
-
+            
+            player.Draw(spriteBatch);
 
             base.Draw(gameTime);
-
             spriteBatch.End();
         }
 
