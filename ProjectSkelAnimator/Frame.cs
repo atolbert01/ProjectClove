@@ -21,21 +21,34 @@ namespace ProjectSkelAnimator
             Script = "";
         }
 
-        public Frame(Frame originalFrame)
+        public Frame(Frame originalFrame, bool flip, Point center)
         {
             //this.cursor = cursor;
             Parts = new Part[originalFrame.Parts.Length];
             for (int i = 0; i < originalFrame.Parts.Length; i++)
             {
+
                 Parts[i] = new Part(originalFrame.Parts[i].ID, originalFrame.Parts[i].Texture, originalFrame.Parts[i].SourceRect, originalFrame.Parts[i].DestRect);
+
                 Parts[i].Parent = originalFrame.Parts[i].Parent;
-                Parts[i].Rotation = originalFrame.Parts[i].Rotation;
                 Parts[i].Scale = originalFrame.Parts[i].Scale;
                 Parts[i].Origin = originalFrame.Parts[i].Origin;
                 Parts[i].WorldOrigin = originalFrame.Parts[i].WorldOrigin;
-                Parts[i].Position = originalFrame.Parts[i].Position;
                 Parts[i].Tint = originalFrame.Parts[i].Tint;
                 Parts[i].State = originalFrame.Parts[i].State;
+
+                if (flip)
+                {
+                    Parts[i].Rotation = -originalFrame.Parts[i].Rotation;
+                    Parts[i].Position = new Vector2(center.X + (center.X - originalFrame.Parts[i].Position.X), originalFrame.Parts[i].Position.Y);
+                    Parts[i].IsFlipped = true;
+                }
+                else
+                {
+                    Parts[i].Rotation = originalFrame.Parts[i].Rotation;
+                    Parts[i].Position = originalFrame.Parts[i].Position;
+                    Parts[i].IsFlipped = false;
+                }
             }
             SelectedIndex = originalFrame.SelectedIndex;
             if (Parts.Length > 0)

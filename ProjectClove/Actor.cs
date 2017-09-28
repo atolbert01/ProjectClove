@@ -13,28 +13,57 @@ namespace ProjectClove
         {
             get{ return new Rectangle((int)Location.X - Anim.Bounds.Width / 2, (int)Location.Y - Anim.Bounds.Height / 2, Anim.Bounds.Width, Anim.Bounds.Height);}
         }
+        private KeyboardState prevKeyState;
         public Actor(Animation[] anims, Vector2 loc)
         {
             Animations = anims;
-            Anim = Animations[1];
+            Anim = Animations[0];
             Location = loc;
         }
 
         public void Update()
         {
             KeyboardState keyState = Keyboard.GetState();
-            
+
             // Testing collision checking.
             if (keyState.IsKeyDown(Keys.Left))
             {
-                if (BoundingBox.X > 4) { Location += new Vector2(-4, 0); }
+                if (BoundingBox.X > 6)
+                {
+                    Location += new Vector2(-6, 0);
+                    Anim = Animations[3];
+                }
+                else
+                {
+                    Anim = Animations[2];
+                }
             }
             else if (keyState.IsKeyDown(Keys.Right))
             {
-                if (BoundingBox.X < 796 - BoundingBox.Width) { Location += new Vector2(4, 0); }
+                if (BoundingBox.X < 794 - BoundingBox.Width)
+                {
+                    Location += new Vector2(6, 0);
+                    Anim = Animations[1];
+                }
+                else
+                {
+                    Anim = Animations[0];
+                }
+            }
+            else if (keyState.IsKeyUp(Keys.Right) && keyState.IsKeyUp(Keys.Left))
+            {
+                if (prevKeyState.IsKeyDown(Keys.Right))
+                {
+                    Anim = Animations[0];
+                }
+                else if (prevKeyState.IsKeyDown(Keys.Left))
+                {
+                    Anim = Animations[2];
+                }
             }
 
             Anim.Update(Location);
+            prevKeyState = keyState;
         }
         public void Draw(SpriteBatch spriteBatch)
         {

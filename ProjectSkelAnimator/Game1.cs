@@ -242,12 +242,12 @@ namespace ProjectSkelAnimator
                 Frame newFrame = currentFrame;
                 if (currentAnimation.Frames.Length > 1)
                 {
-                    currentAnimation.AddFrame(new Frame(newFrame));
+                    currentAnimation.AddFrame(new Frame(newFrame, false, currentAnimation.Bounds.Center));
                     textScript.Text = currentAnimation.Frames[currentAnimation.CurrentFrameIndex].Script;
                 }
                 else
                 {
-                    currentAnimation.InsertFrame(new Frame(newFrame));
+                    currentAnimation.InsertFrame(new Frame(newFrame, false, currentAnimation.Bounds.Center));
                     textScript.Text = currentAnimation.Frames[currentAnimation.CurrentFrameIndex].Script;
                 }
             }
@@ -297,7 +297,7 @@ namespace ProjectSkelAnimator
                 newAnim.Bounds = new Rectangle(animGroup.CurrentAnimation.Bounds.X, animGroup.CurrentAnimation.Bounds.Y, animGroup.CurrentAnimation.Bounds.Width, animGroup.CurrentAnimation.Bounds.Height);
                 foreach (Frame frame in animGroup.CurrentAnimation.Frames)
                 {
-                    newAnim.AddFrame(new Frame(frame));
+                    newAnim.AddFrame(new Frame(frame, false, newAnim.Bounds.Center));
                 }
                 animGroup.AddAnimation(newAnim);
                 animGroupTextFields = AddNewTextField(animGroupTextFields, new Vector2(36, 152 + ((consolas.LineSpacing + 2) * animGroup.Animations.Length)));
@@ -340,6 +340,7 @@ namespace ProjectSkelAnimator
                             currentAnimation.AddFrame(new Frame());
                         }
                         currentFrame = currentAnimation.CurrentFrame;
+                        animGroup.CurrentAnimation = currentAnimation;
                     }
                 }
             }
@@ -459,7 +460,21 @@ namespace ProjectSkelAnimator
             if (KeyState.IsKeyDown(Keys.OemPlus) && PrevKeyState.IsKeyUp(Keys.OemPlus)) { camera.Zoom += 0.25f; }
             if (KeyState.IsKeyDown(Keys.OemMinus) && PrevKeyState.IsKeyUp(Keys.OemMinus)) { camera.Zoom -= 0.25f; }
             if (KeyState.IsKeyDown(Keys.Q) && PrevKeyState.IsKeyUp(Keys.Q)) { animGroup.CurrentAnimation.DrawBounds = !animGroup.CurrentAnimation.DrawBounds; }
-
+            if (KeyState.IsKeyDown(Keys.W) && PrevKeyState.IsKeyUp(Keys.W))
+            {
+                Animation newAnim = new Animation(pixelTexture);
+                newAnim.Bounds = new Rectangle(animGroup.CurrentAnimation.Bounds.X, animGroup.CurrentAnimation.Bounds.Y, animGroup.CurrentAnimation.Bounds.Width, animGroup.CurrentAnimation.Bounds.Height);
+                foreach (Frame frame in animGroup.CurrentAnimation.Frames)
+                {
+                    newAnim.AddFrame(new Frame(frame, true, newAnim.Bounds.Center));
+                }
+                animGroup.AddAnimation(newAnim);
+                animGroupTextFields = AddNewTextField(animGroupTextFields, new Vector2(36, 152 + ((consolas.LineSpacing + 2) * animGroup.Animations.Length)));
+                if (animGroupTextFields[animGroup.Animations.Length - 1] != null)
+                {
+                    LoadEyeButtons();
+                }
+            }
 
             for (int i = 0; i < animGroup.Animations.Length; i++)
             {
