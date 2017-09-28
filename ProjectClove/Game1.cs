@@ -42,7 +42,7 @@ namespace ProjectClove
             spriteBatch = new SpriteBatch(GraphicsDevice);
             // TODO: use this.Content to load your game content here
             Texture2D man1Tex = Content.Load<Texture2D>("gfx/man1");
-            player = new Actor(ParseAnimFiles("man1", man1Tex));
+            player = new Actor(ParseAnimFiles("man2", man1Tex), new Vector2(100, 200));
         }
 
         /// <summary>

@@ -25,8 +25,12 @@ namespace ProjectClove
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            //spriteBatch.Draw(Texture, Position, SourceRectangle, Tint, Rotation);
             spriteBatch.Draw(Texture, Position, SourceRect, Tint, Rotation, Origin, Scale, (IsFlipped ? SpriteEffects.FlipHorizontally : SpriteEffects.None), 0);
+        }
+
+        public void Draw(SpriteBatch spriteBatch, Vector2 loc)
+        {
+            spriteBatch.Draw(Texture, Position + loc, SourceRect, Tint, Rotation, Origin, Scale, (IsFlipped ? SpriteEffects.FlipHorizontally : SpriteEffects.None), 0);
         }
     }
 }

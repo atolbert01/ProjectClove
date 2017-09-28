@@ -10,13 +10,13 @@ namespace ProjectClove
 
         public Frame() { }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, Vector2 loc)
         {
             if (Parts != null)
             {
                 foreach (Part part in Parts)
                 {
-                    part.Draw(spriteBatch);
+                    part.Draw(spriteBatch, loc);
                 }
             }
         }

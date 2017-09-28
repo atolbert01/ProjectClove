@@ -11,12 +11,14 @@ namespace ProjectClove
         public Frame CurrentFrame { get; set; }
         public int CurrentIndex { get; set; }
         public int Tick { get; set; }
+        private Vector2 center { get; set; }
+
         public Animation()
         {
 
         }
 
-        public void Update()
+        public void Update(Vector2 loc)
         {
             if (Frames != null)
             {
@@ -51,11 +53,11 @@ namespace ProjectClove
             }
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, Vector2 loc)
         {
             if (CurrentFrame != null)
             {
-                CurrentFrame.Draw(spriteBatch);
+                CurrentFrame.Draw(spriteBatch, loc);
             }
         }
     }

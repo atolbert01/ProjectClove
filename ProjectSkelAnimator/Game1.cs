@@ -499,7 +499,8 @@ namespace ProjectSkelAnimator
                         file.Write(part.IsFlipped); // bool
                         file.Write(part.Origin.X); file.Write(part.Origin.Y); // float float
                         file.Write(part.WorldOrigin.X); file.Write(part.WorldOrigin.Y); // float float
-                        file.Write(part.Position.X); file.Write(part.Position.Y); // float float
+                        //file.Write(part.Position.X); file.Write(part.Position.Y); // float float
+                        file.Write(part.Position.X - anim.Bounds.Center.X); file.Write(part.Position.Y - anim.Bounds.Center.Y); // float float
                         file.Write(part.Scale); // float
                         file.Write(part.Rotation); // float
                         file.Write(part.TexID); // int
@@ -538,7 +539,7 @@ namespace ProjectSkelAnimator
                         newPart.IsFlipped = file.ReadBoolean();
                         newPart.Origin = new Vector2(file.ReadSingle(), file.ReadSingle());
                         newPart.WorldOrigin = new Vector2(file.ReadSingle(), file.ReadSingle());
-                        newPart.Position = new Vector2(file.ReadSingle(), file.ReadSingle());
+                        newPart.Position = new Vector2(newAnim.Bounds.Center.X + file.ReadSingle(), newAnim.Bounds.Center.Y + file.ReadSingle());
                         newPart.Scale = file.ReadSingle();
                         newPart.Rotation = file.ReadSingle();
                         newPart.Texture = partTextures[file.ReadInt32()];
