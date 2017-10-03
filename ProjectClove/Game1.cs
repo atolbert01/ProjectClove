@@ -12,7 +12,11 @@ namespace ProjectClove
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-        Actor player;
+        Level[] levels;
+        Level currentLevel;
+        Player player;
+        Player player2;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -28,7 +32,9 @@ namespace ProjectClove
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-
+            levels = new Level[1];
+            levels[0] = new Level();
+            currentLevel = levels[0];
             base.Initialize();
         }
 
@@ -42,7 +48,17 @@ namespace ProjectClove
             spriteBatch = new SpriteBatch(GraphicsDevice);
             // TODO: use this.Content to load your game content here
             Texture2D man1Tex = Content.Load<Texture2D>("gfx/man1");
-            player = new Actor(ParseAnimFiles("man2", man1Tex), new Vector2(100, 200));
+            player = new Player(ParseAnimFiles("man2", man1Tex), new Vector2(100, 360));
+            player2 = new Player(ParseAnimFiles("man2", man1Tex), new Vector2(180, 360));
+            currentLevel.Rooms.Add(0, new Room(0));
+            currentLevel.CurrentRoom = currentLevel.Rooms[0];
+            currentLevel.CurrentRoom.Layers = new Layer[2];
+            currentLevel.CurrentRoom.Layers[0] = new Layer();
+            currentLevel.CurrentRoom.Layers[1] = new Layer();
+            currentLevel.CurrentRoom.Layers[0].Actors = new GameActor[1];
+            currentLevel.CurrentRoom.Layers[0].Actors[0] = player;
+            currentLevel.CurrentRoom.Layers[1].Actors = new GameActor[1];
+            currentLevel.CurrentRoom.Layers[1].Actors[0] = player2;
         }
 
         /// <summary>
@@ -64,8 +80,7 @@ namespace ProjectClove
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            player.Update();
-
+            currentLevel.Update(gameTime);
             base.Update(gameTime);
         }
 
@@ -77,8 +92,8 @@ namespace ProjectClove
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
-            
-            player.Draw(spriteBatch);
+
+            currentLevel.Draw(spriteBatch);
 
             base.Draw(gameTime);
             spriteBatch.End();

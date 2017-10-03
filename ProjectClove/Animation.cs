@@ -10,15 +10,14 @@ namespace ProjectClove
         public Frame[] Frames { get; set; }
         public Frame CurrentFrame { get; set; }
         public int CurrentIndex { get; set; }
-        public int Tick { get; set; }
+        public float Tick { get; set; }
         private Vector2 center { get; set; }
-
         public Animation()
         {
 
         }
 
-        public void Update(Vector2 loc)
+        public void Update(GameTime gameTime)
         {
             if (Frames != null)
             {
@@ -30,11 +29,10 @@ namespace ProjectClove
                 }
                 else
                 {
-                    if (Tick < CurrentFrame.Ticks)
-                    {
-                        Tick++;
-                    }
-                    else
+                    float et = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    Tick += et * 60.0f;
+
+                    if(Tick > CurrentFrame.Ticks)
                     {
                         if (CurrentIndex + 1 < Frames.Length)
                         {

@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace ProjectClove
 {
-    class Actor
+    class GameActor
     {
         public Animation[] Animations { get; set; }
         public Animation Anim { get; set; }
@@ -13,15 +13,31 @@ namespace ProjectClove
         {
             get{ return new Rectangle((int)Location.X - Anim.Bounds.Width / 2, (int)Location.Y - Anim.Bounds.Height / 2, Anim.Bounds.Width, Anim.Bounds.Height);}
         }
-        private KeyboardState prevKeyState;
-        public Actor(Animation[] anims, Vector2 loc)
+        public GameActor(Animation[] anims, Vector2 loc)
         {
             Animations = anims;
             Anim = Animations[0];
             Location = loc;
         }
 
-        public void Update()
+        public virtual void Update(GameTime gameTime)
+        {
+            Anim.Update(gameTime);
+        }
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            Anim.Draw(spriteBatch, Location);
+        }
+    }
+
+    class Player : GameActor
+    {
+        private KeyboardState prevKeyState;
+        public Player(Animation[] anims, Vector2 loc) : base(anims, loc)
+        {
+        }
+
+        public override void Update(GameTime gameTime)
         {
             KeyboardState keyState = Keyboard.GetState();
 
@@ -61,13 +77,8 @@ namespace ProjectClove
                     Anim = Animations[2];
                 }
             }
-
-            Anim.Update(Location);
             prevKeyState = keyState;
-        }
-        public void Draw(SpriteBatch spriteBatch)
-        {
-            Anim.Draw(spriteBatch, Location);
+            base.Update(gameTime);
         }
     }
 }
