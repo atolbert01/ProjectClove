@@ -15,9 +15,9 @@ namespace ProjectClove
         {
             Rooms = new Dictionary<int, Room>();
         }
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, GameState gameState)
         {
-            CurrentRoom.Update(gameTime);
+            CurrentRoom.Update(gameTime, gameState);
         }
         public void Draw(SpriteBatch spriteBatch)
         {

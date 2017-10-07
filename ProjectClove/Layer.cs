@@ -15,11 +15,11 @@ namespace ProjectClove
             Actors = new GameActor[1];
         }
 
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, GameState gameState)
         {
             foreach (GameActor actor in Actors)
             {
-                actor.Update(gameTime);
+                actor.Update(gameTime, gameState);
             }
         }
 

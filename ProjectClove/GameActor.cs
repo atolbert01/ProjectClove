@@ -1,84 +1,138 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
+using System.Collections.Generic;
 
 namespace ProjectClove
 {
+    /// <summary>
+    /// GameActors are characters, destructibles, animated traps, etc. Anything that is animated.
+    /// GameActors also create a test log which consists of a list of TestLogEntries storing the GameActor's state, state start time, and state end time.
+    /// </summary>
     class GameActor
     {
+        public List<TestLogEntry> LogList { get; set; }
+        public TestLogEntry CurrentLogEntry { get; set; }
+        public int CurrentLogIndex { get; set; }
         public Animation[] Animations { get; set; }
         public Animation Anim { get; set; }
         public Vector2 Location { get; set; }
-        public Rectangle BoundingBox
+        public Vector2 Start { get; set; }
+        private GameTime _gameTime;
+        private float _playbackTime;
+        private int _state;
+        public GameState GameState { get; set; }
+        public TestLogEntry NewLogEntry { get; set; }
+        public int LoggingState
         {
-            get{ return new Rectangle((int)Location.X - Anim.Bounds.Width / 2, (int)Location.Y - Anim.Bounds.Height / 2, Anim.Bounds.Width, Anim.Bounds.Height);}
+            get { return _state; }
+            set
+            {
+                if (GameState == GameState.Playtest)
+                {
+                    if (_state != value)
+                    {
+                        if (NewLogEntry == null)
+                        {
+                            NewLogEntry = new TestLogEntry(_gameTime, value.GetHashCode());
+                        }
+                        else
+                        {
+                            NewLogEntry.EndTime = (float)_gameTime.TotalGameTime.TotalMilliseconds;
+                            NewLogEntry = new TestLogEntry(_gameTime, value.GetHashCode());
+                        }
+                        LogList.Add(NewLogEntry);
+                    }
+                }
+                _state = value;
+            }
         }
+
         public GameActor(Animation[] anims, Vector2 loc)
         {
+            CurrentLogIndex = -1;
+            LogList = new List<TestLogEntry>();
             Animations = anims;
             Anim = Animations[0];
             Location = loc;
+            Start = loc;
         }
 
-        public virtual void Update(GameTime gameTime)
+        public virtual void Update(GameTime gameTime, GameState gameState)
         {
-            Anim.Update(gameTime);
+            _gameTime = gameTime;
+
+            // If we have just changed state to test mode then we need to make sure we store the end time for the current log entry
+            if (GameState != gameState)
+            {
+                if (gameState == GameState.RunLog)
+                {
+                    if (NewLogEntry.EndTime == 0)
+                    {
+                        NewLogEntry.EndTime = (float)_gameTime.TotalGameTime.TotalMilliseconds;
+                    }
+                }
+            }
+            GameState = gameState;
+
+            switch (gameState)
+            {
+                case GameState.Play:
+                    break;
+                case GameState.Playtest:
+                    break;
+                case GameState.RunLog:
+                    if (CurrentLogIndex == -1)
+                    {
+                        LoggingState = 0;
+                        _playbackTime = 0;
+                        GetNextLogEntry();
+                    }
+
+                    if (CurrentLogIndex == 0)
+                    {
+                        Location = Start;
+                    }
+
+                    if (_playbackTime < CurrentLogEntry.EndTime)
+                    {
+                        LoggingState = CurrentLogEntry.State;
+                        _playbackTime += 16.6667f;
+                    }
+                    else
+                    {
+                        GetNextLogEntry();
+                        _playbackTime = CurrentLogEntry.StartTime;
+                    }
+                    break;
+                case GameState.Edit:
+                    break;
+            }
+
+                Anim.Update(gameTime);
         }
         public void Draw(SpriteBatch spriteBatch)
         {
             Anim.Draw(spriteBatch, Location);
         }
-    }
 
-    class Player : GameActor
-    {
-        private KeyboardState prevKeyState;
-        public Player(Animation[] anims, Vector2 loc) : base(anims, loc)
+        public void GetNextLogEntry()
         {
-        }
-
-        public override void Update(GameTime gameTime)
-        {
-            KeyboardState keyState = Keyboard.GetState();
-
-            // Testing collision checking.
-            if (keyState.IsKeyDown(Keys.Left))
+            if (LogList.Count >= 1)
             {
-                if (BoundingBox.X > 6)
+                if (CurrentLogIndex + 1 < LogList.Count)
                 {
-                    Location += new Vector2(-6, 0);
-                    Anim = Animations[3];
+                    CurrentLogIndex++;
                 }
                 else
                 {
-                    Anim = Animations[2];
+                    CurrentLogIndex = 0;
                 }
+                CurrentLogEntry = LogList[CurrentLogIndex];
             }
-            else if (keyState.IsKeyDown(Keys.Right))
+            else
             {
-                if (BoundingBox.X < 794 - BoundingBox.Width)
-                {
-                    Location += new Vector2(6, 0);
-                    Anim = Animations[1];
-                }
-                else
-                {
-                    Anim = Animations[0];
-                }
+                CurrentLogEntry = null;
             }
-            else if (keyState.IsKeyUp(Keys.Right) && keyState.IsKeyUp(Keys.Left))
-            {
-                if (prevKeyState.IsKeyDown(Keys.Right))
-                {
-                    Anim = Animations[0];
-                }
-                else if (prevKeyState.IsKeyDown(Keys.Left))
-                {
-                    Anim = Animations[2];
-                }
-            }
-            prevKeyState = keyState;
-            base.Update(gameTime);
         }
     }
 }

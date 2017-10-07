@@ -20,11 +20,11 @@ namespace ProjectClove
         {
             ID = id;
         }
-        public void Update(GameTime gameTime)
+        public void Update(GameTime gameTime, GameState gameState)
         {
             foreach (Layer layer in Layers)
             {
-                layer.Update(gameTime);
+                layer.Update(gameTime, gameState);
             }
         }
 

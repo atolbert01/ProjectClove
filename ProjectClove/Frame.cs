@@ -6,7 +6,7 @@ namespace ProjectClove
     class Frame
     {
         public int Ticks { get; set; }
-        public Part[] Parts { get; set; }
+        public Sprite[] Parts { get; set; }
 
         public Frame() { }
 
@@ -14,7 +14,7 @@ namespace ProjectClove
         {
             if (Parts != null)
             {
-                foreach (Part part in Parts)
+                foreach (Sprite part in Parts)
                 {
                     part.Draw(spriteBatch, loc);
                 }
