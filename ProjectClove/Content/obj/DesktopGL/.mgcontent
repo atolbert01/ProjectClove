@@ -6,5 +6,7 @@
   <SourceFiles>
     <File>D:/GameDev/.NET Projects/ProjectClove/ProjectClove/Content/gfx/texPrototype.png</File>
     <File>D:/GameDev/.NET Projects/ProjectClove/ProjectClove/Content/gfx/man1.png</File>
+    <File>D:/GameDev/.NET Projects/ProjectClove/ProjectClove/Content/clovetype.spritefont</File>
+    <File>D:/GameDev/.NET Projects/ProjectClove/ProjectClove/Content/gfx/uieditor.png</File>
   </SourceFiles>
 </SourceFileCollection>

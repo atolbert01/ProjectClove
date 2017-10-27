@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SourceFile>D:/GameDev/.NET Projects/ProjectClove/ProjectSkelAnimator/Content/consolas.spritefont</SourceFile>
-  <SourceTime>2017-08-17T21:18:11.4602911-04:00</SourceTime>
+  <SourceTime>2017-10-22T11:40:40.4149668-04:00</SourceTime>
   <DestFile>D:/GameDev/.NET Projects/ProjectClove/ProjectSkelAnimator/Content/bin/DesktopGL/consolas.xnb</DestFile>
-  <DestTime>2017-09-10T16:47:16.3965181-04:00</DestTime>
+  <DestTime>2017-10-22T11:41:00.9833802-04:00</DestTime>
   <Importer>FontDescriptionImporter</Importer>
   <ImporterTime>2017-03-01T10:05:36-05:00</ImporterTime>
   <Processor>FontDescriptionProcessor</Processor>
