@@ -67,5 +67,10 @@ namespace ProjectClove
         {
             spriteBatch.Draw(Texture, Position + loc, SourceRect, Tint, Rotation, Origin, Scale, (IsFlipped ? SpriteEffects.FlipHorizontally : SpriteEffects.None), 0);
         }
+
+        public void Draw(SpriteBatch spriteBatch, Rectangle destRect)
+        {
+            spriteBatch.Draw(Texture, destRect, Tint);
+        }
     }
 }

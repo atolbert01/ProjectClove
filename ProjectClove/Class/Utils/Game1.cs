@@ -107,7 +107,7 @@ namespace ProjectClove
             pixelTexture.SetData(new Color[] { Color.White });
 
             //editor = new EditorUI(graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, pixelTexture);
-            editor = new EditorUI(imageScale, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, uiEditorTexture);
+            editor = new EditorUI(imageScale, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, uiEditorTexture, pixelTexture, clovetype);
 
             Texture2D man1Tex = Content.Load<Texture2D>("gfx/man1");
             player = new Player(ParseAnimFiles("man2", man1Tex), imageScale, new Vector2(800, 600) * imageScale, input);

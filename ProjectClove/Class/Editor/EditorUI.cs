@@ -6,9 +6,9 @@ namespace ProjectClove
     class EditorUI
     {
         public TerrainPanel TPanel;
-        public EditorUI(float imageScale, int screenWidth, int screenHeight, Texture2D editorTexture)
+        public EditorUI(float imageScale, int screenWidth, int screenHeight, Texture2D editorTexture, Texture2D pixelTexture, SpriteFont font)
         {
-            TPanel = new TerrainPanel(imageScale, screenWidth, screenHeight, editorTexture);
+            TPanel = new TerrainPanel(imageScale, screenWidth, screenHeight, editorTexture, pixelTexture, font);
         }
 
         public void Draw(SpriteBatch spriteBatch)
