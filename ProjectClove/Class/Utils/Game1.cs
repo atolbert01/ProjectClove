@@ -59,9 +59,7 @@ namespace ProjectClove
             //graphics.PreferredBackBufferHeight = 1080;
 
             graphics.IsFullScreen = false;
-
-            //imageScale = graphics.PreferredBackBufferHeight / 1080;
-            imageScale = (float)graphics.PreferredBackBufferHeight / 1080f;
+            imageScale = graphics.PreferredBackBufferHeight / 1080f;
 
             Content.RootDirectory = "Content";
         }
@@ -157,29 +155,7 @@ namespace ProjectClove
                     gameState = GameState.Edit;
                     break;
             }
-
-            //if (gameState == GameState.Playtest)
-            //{
-            //    if (input.KeyState.IsKeyDown(Keys.F6) && input.PrevKeyState.IsKeyUp(Keys.F6))
-            //    {
-            //        gameState = GameState.RunLog;
-            //    }
-            //}
-
             currentLevel.Update(gameTime, gameState);
-
-            //switch (gameState)
-            //{
-            //    case GameState.Play:
-
-            //        //playMode.Update(gameTime, currentLevel);
-            //        currentLevel.Update(gameTime, gameState);
-            //        break;
-            //    case GameState.Test:
-            //        break;
-            //    case GameState.Edit:
-            //        break;
-            //}
             base.Update(gameTime);
         }
 
@@ -193,10 +169,19 @@ namespace ProjectClove
             spriteBatch.Begin();
             //spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, camera.Get_Transformation(GraphicsDevice));
             currentLevel.Draw(spriteBatch);
-            //spriteBatch.DrawString(clovetype, "welcome to the clove the vampire killer game!", new Vector2(200,200)*imageScale, Color.White);
-            //spriteBatch.DrawString(clovetype, "welcome to the clove the vampire killer game!", new Vector2(200, 200) * imageScale, Color.White, 0f, Vector2.Zero, imageScale * 0.15f, SpriteEffects.None, 0);
 
-            editor.Draw(spriteBatch);
+            switch (gameState)
+            {
+                case GameState.Edit:
+                    editor.Draw(spriteBatch);
+                    break;
+                case GameState.Play:
+                    break;
+                case GameState.Playtest:
+                    break;
+                case GameState.RunLog:
+                    break;
+            }
 
             base.Draw(gameTime);
             spriteBatch.End();

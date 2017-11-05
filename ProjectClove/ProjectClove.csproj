@@ -62,6 +62,7 @@
   <ItemGroup>
     <Compile Include="Class\Editor\EditorUI.cs" />
     <Compile Include="Class\Editor\UIButton.cs" />
+    <Compile Include="Class\Editor\UITextBox.cs" />
     <Compile Include="Class\Game Objects\GameActor.cs" />
     <Compile Include="Class\Animation\Animation.cs" />
     <Compile Include="Class\Animation\Frame.cs" />

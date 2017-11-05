@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <SourceFile>D:/GameDev/.NET Projects/ProjectClove/ProjectClove/Content/gfx/uieditor.png</SourceFile>
-  <SourceTime>2017-10-26T19:46:18.6858117-04:00</SourceTime>
+  <SourceTime>2017-11-04T17:54:05.7770222-04:00</SourceTime>
   <DestFile>D:/GameDev/.NET Projects/ProjectClove/ProjectClove/Content/bin/DesktopGL/gfx/uieditor.xnb</DestFile>
-  <DestTime>2017-10-26T19:47:10.5241119-04:00</DestTime>
+  <DestTime>2017-11-04T17:56:00.5108282-04:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2017-03-01T10:05:36-05:00</ImporterTime>
   <Processor>TextureProcessor</Processor>
