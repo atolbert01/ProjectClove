@@ -18,10 +18,14 @@ namespace ProjectClove
         public UIButton NavRight_TerrainType { get; set; }
         public UITextBox LevelNameField { get; set; }
         public UITextBox TerrainTypeField { get; set; }
+        public Label TerrainLabel { get; set; }
+        public Label MapLabel { get; set; }
 
         private SpriteFont _font;
         private float _imageScale;
         private string _mapLabel, _terrainLabel;
+        private Vector2 _movement;
+        private Sprite[] UIElements;
         public TerrainPanel(float imageScale, Texture2D editorTexture, Texture2D pixelTexture, SpriteFont font)
         {
             _imageScale = imageScale;
@@ -53,26 +57,33 @@ namespace ProjectClove
             TerrainTypeField = new UITextBox(editorTexture, new Vector2(48, 912) * _imageScale, new Rectangle(512, 448, 368, 64), Color.White, 0f, Vector2.Zero, 1.0f * _imageScale, false);
             NavLeft_TerrainType = new UIButton(editorTexture, new Vector2(16, 920) * _imageScale, new Rectangle(561, 528, 32, 48), Color.White, 0f, Vector2.Zero, 1.0f * _imageScale, false);
             NavRight_TerrainType = new UIButton(editorTexture, new Vector2(416, 920) * _imageScale, new Rectangle(624, 528, 32, 48), Color.White, 0f, Vector2.Zero, 1.0f * _imageScale, false);
+
+            UIElements = new Sprite[] {Fill, PanelSurface_Top, PanelSurface_Bottom, MapGrid, TBtnFlat, TBtnInclineR, TBtnInclineL, LevelNameField, TerrainTypeField, NavLeft_LevelName, NavRight_LevelName, NavLeft_TerrainType, NavRight_TerrainType};
+
+            TerrainLabel = new Label("-terrain-", new Vector2(112, 688) * _imageScale, _font, 2.0f * _imageScale);
+            MapLabel = new Label("-level map-", new Vector2(80, 64) * _imageScale, _font, 2.0f * _imageScale);
+        }
+
+        public void Move(Vector2 amount)
+        {
+            _movement = amount;
+            foreach (Sprite e in UIElements)
+            {
+                e.Position += amount;
+            }
+            TerrainLabel.Position += amount;
+            MapLabel.Position += amount;
         }
 
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            Fill.Draw(spriteBatch, Fill.DestRect);
-            PanelSurface_Top.Draw(spriteBatch);
-            PanelSurface_Bottom.Draw(spriteBatch);
-            MapGrid.Draw(spriteBatch);
-            spriteBatch.DrawString(_font, _mapLabel, new Vector2(80, 64) * _imageScale, Color.White, 0f, Vector2.Zero, 2 * _imageScale, SpriteEffects.None, 0f);
-            spriteBatch.DrawString(_font, _terrainLabel, new Vector2(112, 688) * _imageScale, Color.White, 0f, Vector2.Zero, 2 * _imageScale, SpriteEffects.None, 0f);
-            TBtnFlat.Draw(spriteBatch);
-            TBtnInclineR.Draw(spriteBatch);
-            TBtnInclineL.Draw(spriteBatch);
-            LevelNameField.Draw(spriteBatch);
-            TerrainTypeField.Draw(spriteBatch);
-            NavLeft_LevelName.Draw(spriteBatch);
-            NavRight_LevelName.Draw(spriteBatch);
-            NavLeft_TerrainType.Draw(spriteBatch);
-            NavRight_TerrainType.Draw(spriteBatch);
+            foreach (Sprite e in UIElements)
+            {
+                e.Draw(spriteBatch);
+            }
+            TerrainLabel.Draw(spriteBatch);
+            MapLabel.Draw(spriteBatch);
         }
     }
 }

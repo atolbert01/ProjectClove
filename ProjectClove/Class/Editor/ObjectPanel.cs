@@ -5,10 +5,10 @@ namespace ProjectClove
 {
     class ObjectPanel
     {
-        public UIButton EnemyTab { get; set; }
-        public UIButton ItemTab { get; set; }
-        public UIButton HazardTab { get; set; } // Spikes, traps
-        public UIButton DecorationTab { get; set; } // Decorations and platforms
+        public UIButton EnemyGroup { get; set; }
+        public UIButton ItemGroup { get; set; }
+        public UIButton ObstacleGroup { get; set; } // Spikes, traps
+        public UIButton DecorationGroup { get; set; } // Decorations and platforms
         public Sprite PanelSurface { get; set; }
         private SpriteFont _font;
         private float _imageScale;

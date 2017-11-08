@@ -26,7 +26,7 @@ namespace ProjectClove
         SpriteFont clovetype;
         EditorUI editor;
         Texture2D pixelTexture, uiEditorTexture;
-        //Camera2D camera;
+        Camera2D camera;
         float imageScale;
 
         public Game1()
@@ -92,11 +92,6 @@ namespace ProjectClove
             spriteBatch = new SpriteBatch(GraphicsDevice);
             // TODO: use this.Content to load your game content here
 
-            //camera = new Camera2D(imageScale);
-            //camera.Position = new Vector2(graphics.PreferredBackBufferWidth/2, graphics.PreferredBackBufferHeight/2);
-            //camera.Zoom = 1.0f;
-
-
             clovetype = Content.Load<SpriteFont>("clovetype");
 
             uiEditorTexture = Content.Load<Texture2D>("gfx/uieditor");
@@ -104,8 +99,7 @@ namespace ProjectClove
             pixelTexture = new Texture2D(GraphicsDevice, 1, 1);
             pixelTexture.SetData(new Color[] { Color.White });
 
-            //editor = new EditorUI(graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, pixelTexture);
-            editor = new EditorUI(imageScale, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, uiEditorTexture, pixelTexture, clovetype);
+            editor = new EditorUI(imageScale, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, currentLevel, uiEditorTexture, pixelTexture, clovetype);
 
             Texture2D man1Tex = Content.Load<Texture2D>("gfx/man1");
             player = new Player(ParseAnimFiles("man2", man1Tex), imageScale, new Vector2(800, 600) * imageScale, input);
@@ -119,6 +113,11 @@ namespace ProjectClove
             currentLevel.CurrentRoom.Layers[0].Actors[0] = player;
             currentLevel.CurrentRoom.Layers[1].Actors = new GameActor[1];
             currentLevel.CurrentRoom.Layers[1].Actors[0] = player2;
+
+            camera = new Camera2D(imageScale, currentLevel, editor);
+            //camera.Position = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
+            camera.Zoom = 1.0f;
+
         }
 
         /// <summary>
@@ -140,6 +139,7 @@ namespace ProjectClove
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             input.Update();
+            camera.Update(gameState, input);
             switch (input.State)
             {
                 case InputState.Play:
@@ -156,6 +156,7 @@ namespace ProjectClove
                     break;
             }
             currentLevel.Update(gameTime, gameState);
+            //editor.Update(camera);
             base.Update(gameTime);
         }
 
@@ -166,8 +167,8 @@ namespace ProjectClove
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            spriteBatch.Begin();
-            //spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, camera.Get_Transformation(GraphicsDevice));
+            //spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, camera.Get_Transformation(GraphicsDevice));
             currentLevel.Draw(spriteBatch);
 
             switch (gameState)
