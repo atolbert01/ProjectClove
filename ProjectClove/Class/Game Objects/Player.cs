@@ -26,7 +26,7 @@ namespace ProjectClove
         private InputManager _input { get; set; }
         public Rectangle BoundingBox
         {
-            get { return new Rectangle((int)Location.X - Anim.Bounds.Width / 2, (int)Location.Y - Anim.Bounds.Height / 2, Anim.Bounds.Width, Anim.Bounds.Height); }
+            get { return new Rectangle((int)Position.X - Anim.Bounds.Width / 2, (int)Position.Y - Anim.Bounds.Height / 2, Anim.Bounds.Width, Anim.Bounds.Height); }
         }
         public Player(Animation[] anims, float imageScale, Vector2 loc, InputManager input) : base(anims, imageScale, loc)
         {
@@ -40,15 +40,15 @@ namespace ProjectClove
             switch (gameState)
             {
                 case GameState.Play:
-                    if (_input.State == InputState.Left)
+                    if (_input.Left)
                     {
                         State = PlayerState.RunL;
                     }
-                    else if (_input.State == InputState.Right)
+                    else if (_input.Right)
                     {
                         State = PlayerState.RunR;
                     }
-                    else if (_input.State == InputState.None)
+                    else if (!_input.Left && !_input.Right)
                     {
                         if (PrevState == PlayerState.RunR || PrevState == PlayerState.StandR)
                         {
@@ -62,15 +62,15 @@ namespace ProjectClove
                     PrevState = State;
                     break;
                 case GameState.Playtest:
-                    if (_input.State == InputState.Left)
+                    if (_input.Left)
                     {
                         State = PlayerState.RunL;
                     }
-                    else if (_input.State == InputState.Right)
+                    else if (_input.Right)
                     {
                         State = PlayerState.RunR;
                     }
-                    else if (_input.State == InputState.None)
+                    else if (!_input.Left && !_input.Right)
                     {
                         if (PrevState == PlayerState.RunR || PrevState == PlayerState.StandR)
                         {
@@ -127,7 +127,7 @@ namespace ProjectClove
 
         public void Move(Vector2 direction)
         {
-            Location += direction * ImageScale;
+            Position += direction * ImageScale;
         }
     }
 }

@@ -20,7 +20,7 @@ namespace ProjectClove
         List<DisplayMode> supportedDisplayModes;
         Level[] levels;
         Level currentLevel;
-        Player player, player2;
+        Player player;
         GameState gameState;
         InputManager input;
         SpriteFont clovetype;
@@ -99,11 +99,8 @@ namespace ProjectClove
             pixelTexture = new Texture2D(GraphicsDevice, 1, 1);
             pixelTexture.SetData(new Color[] { Color.White });
 
-            editor = new EditorUI(imageScale, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, currentLevel, uiEditorTexture, pixelTexture, clovetype);
-
             Texture2D man1Tex = Content.Load<Texture2D>("gfx/man1");
             player = new Player(ParseAnimFiles("man2", man1Tex), imageScale, new Vector2(800, 600) * imageScale, input);
-            player2 = new Player(ParseAnimFiles("man2", man1Tex), imageScale, new Vector2(180, 360) * imageScale, input);
             currentLevel.Rooms.Add(0, new Room(0));
             currentLevel.CurrentRoom = currentLevel.Rooms[0];
             currentLevel.CurrentRoom.Layers = new Layer[2];
@@ -112,11 +109,12 @@ namespace ProjectClove
             currentLevel.CurrentRoom.Layers[0].Actors = new GameActor[1];
             currentLevel.CurrentRoom.Layers[0].Actors[0] = player;
             currentLevel.CurrentRoom.Layers[1].Actors = new GameActor[1];
-            currentLevel.CurrentRoom.Layers[1].Actors[0] = player2;
 
-            camera = new Camera2D(imageScale, currentLevel, editor);
-            //camera.Position = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
+            camera = new Camera2D(imageScale, currentLevel, player);
+            camera.Position = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
             camera.Zoom = 1.0f;
+
+            editor = new EditorUI(imageScale, graphics.GraphicsDevice.Viewport.Width, graphics.GraphicsDevice.Viewport.Height, currentLevel, uiEditorTexture, pixelTexture, clovetype, camera);
 
         }
 
@@ -156,7 +154,7 @@ namespace ProjectClove
                     break;
             }
             currentLevel.Update(gameTime, gameState);
-            //editor.Update(camera);
+            editor.Update();
             base.Update(gameTime);
         }
 

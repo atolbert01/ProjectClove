@@ -21,5 +21,10 @@ namespace ProjectClove
         {
             spriteBatch.DrawString(_font, Text, Position, Color.White, 0f, Vector2.Zero, _size, SpriteEffects.None, 0f);
         }
+
+        public void Draw(SpriteBatch spriteBatch, Vector2 loc)
+        {
+            spriteBatch.DrawString(_font, Text, Position + loc, Color.White, 0f, Vector2.Zero, _size, SpriteEffects.None, 0f);
+        }
     }
 }

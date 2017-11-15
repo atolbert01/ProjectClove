@@ -14,23 +14,28 @@ namespace ProjectClove
         public Level CurrentLevel { get; set; }
         public int RoomWidth { get; set; }
         public int RoomHeight { get; set; }
-        public EditorUI Editor { get; set; }
+        private int _boundsWidth, _boundsHeight;
+        private Player _player;
         public Rectangle BoundingBox
         {
-            get { return new Rectangle((int)Position.X, (int)Position.Y, RoomWidth, RoomHeight); }
+            get { return new Rectangle((int)Position.X, (int)Position.Y, _boundsWidth, _boundsHeight); }
         }
 
-        public Camera2D(float imageScale, Level currentLevel, EditorUI editor)
+        public Camera2D(float imageScale, Level currentLevel, Player player)
         {
             _imageScale = imageScale;
+            _boundsWidth = (int)(1920 * _imageScale);
+            _boundsHeight = (int)(1080 * _imageScale);
+            _player = player;
+
             zoom = imageScale;
             Rotation = 0.0f;
-            //Position = Vector2.Zero;
+            Position = Vector2.Zero;
             CurrentLevel = currentLevel;
-            RoomWidth = (int)(CurrentLevel.CurrentRoom.Width * (1920 * _imageScale));
-            RoomHeight = (int)(CurrentLevel.CurrentRoom.Height * (1080 * _imageScale));
-            Position = new Vector2(RoomWidth/2, RoomHeight/2);
-            Editor = editor;
+
+            RoomWidth = _boundsWidth * CurrentLevel.CurrentRoom.Width;
+            RoomHeight = _boundsHeight * CurrentLevel.CurrentRoom.Height;
+            //Position = new Vector2(RoomWidth/2, RoomHeight/2);
         }
 
         public void Update(GameState gameState, InputManager input)
@@ -38,34 +43,50 @@ namespace ProjectClove
             switch (gameState)
             {
                 case GameState.Play:
+                    Position = _player.Position;
                     break;
                 case GameState.Playtest:
                     break;
                 case GameState.RunLog:
                     break;
                 case GameState.Edit:
-                    if (input.State == InputState.Left)
+                    if (input.Left)
                     {
-                        if (BoundingBox.X > 0)
+                        if (Position.X > 0)
                         {
-                            Move(new Vector2(-4, 0)); //*_imageScale
+                            Move(new Vector2(-16, 0) * _imageScale); //*_imageScale
                         }
                     }
-                    else if (input.State == InputState.Right)
+                    else if (input.Right)
                     {
-                        if ((RoomWidth - BoundingBox.X) < RoomWidth)
+                        if (Position.X < RoomWidth)
                         {
-                            Move(new Vector2(4, 0));
+                            Move(new Vector2(16, 0) * _imageScale);
+                        }
+                    }
+
+                    if (input.Up)
+                    {
+                        if (Position.Y > 0)
+                        {
+                            Move(new Vector2(0, -16) * _imageScale); //*_imageScale
+                        }
+                    }
+                    else if (input.Down)
+                    {
+                        if (Position.Y < RoomHeight)
+                        {
+                            Move(new Vector2(0, 16) * _imageScale);
                         }
                     }
                     break;
             }
         }
 
-        public void Move(Vector2 amount)
+        public void Move(Vector2 direction)
         {
-            Position += amount;
-            Editor.Move(amount);
+            Position += direction;
+            //Editor.Move(direction);
         }
 
         public Matrix Get_Transformation(GraphicsDevice graphicsDevice)

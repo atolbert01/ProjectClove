@@ -19,7 +19,10 @@ namespace ProjectClove
         {
             foreach (GameActor actor in Actors)
             {
-                actor.Update(gameTime, gameState);
+                if (actor != null)
+                {
+                    actor.Update(gameTime, gameState);
+                }
             }
         }
 
@@ -27,7 +30,10 @@ namespace ProjectClove
         {
             foreach (GameActor actor in Actors)
             {
-                actor.Draw(spriteBatch);
+                if (actor != null)
+                {
+                    actor.Draw(spriteBatch);
+                }
             }
         }
     }

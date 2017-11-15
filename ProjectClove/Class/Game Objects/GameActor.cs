@@ -15,7 +15,7 @@ namespace ProjectClove
         public int CurrentLogIndex { get; set; }
         public Animation[] Animations { get; set; }
         public Animation Anim { get; set; }
-        public Vector2 Location { get; set; }
+        public Vector2 Position { get; set; }
         public Vector2 Start { get; set; }
         public float ImageScale { get; set; }
         private GameTime _gameTime;
@@ -55,7 +55,7 @@ namespace ProjectClove
             Animations = anims;
             Anim = Animations[0];
             ImageScale = imageScale;
-            Location = loc;
+            Position = loc;
             Start = loc;
         }
 
@@ -92,7 +92,7 @@ namespace ProjectClove
 
                     if (CurrentLogIndex == 0)
                     {
-                        Location = Start;
+                        Position = Start;
                     }
 
                     if (_playbackTime < CurrentLogEntry.EndTime)
@@ -114,7 +114,7 @@ namespace ProjectClove
         }
         public void Draw(SpriteBatch spriteBatch)
         {
-            Anim.Draw(spriteBatch, Location);
+            Anim.Draw(spriteBatch, Position);
         }
 
         public void GetNextLogEntry()

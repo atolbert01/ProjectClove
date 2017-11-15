@@ -33,7 +33,7 @@ namespace ProjectClove
         public Room(int id)
         {
             ID = id;
-            Width = 1;
+            Width = 2;
             Height = 1;
         }
         public void Update(GameTime gameTime, GameState gameState)
