@@ -15,8 +15,6 @@ D:\GameDev\.NET Projects\ProjectClove\ProjectSkelAnimator\bin\DesktopGL\AnyCPU\D
 D:\GameDev\.NET Projects\ProjectClove\ProjectSkelAnimator\obj\Debug\ProjectSkelAnimator.csprojResolveAssemblyReference.cache
 D:\GameDev\.NET Projects\ProjectClove\ProjectSkelAnimator\obj\Debug\ProjectSkelAnimator.exe
 D:\GameDev\.NET Projects\ProjectClove\ProjectSkelAnimator\obj\Debug\ProjectSkelAnimator.pdb
-D:\GameDev\.NET Projects\ProjectClove\ProjectSkelAnimator\bin\DesktopGL\AnyCPU\Debug\Content\gfx\texPrototype0.xnb
-D:\GameDev\.NET Projects\ProjectClove\ProjectSkelAnimator\bin\DesktopGL\AnyCPU\Debug\Content\gfx\texPrototype1.xnb
 D:\GameDev\.NET Projects\ProjectClove\ProjectSkelAnimator\bin\DesktopGL\AnyCPU\Debug\Content\gfx\cursors.xnb
 D:\GameDev\.NET Projects\ProjectClove\ProjectSkelAnimator\bin\DesktopGL\AnyCPU\Debug\Content\gfx\transparency.xnb
 D:\GameDev\.NET Projects\ProjectClove\ProjectSkelAnimator\bin\DesktopGL\AnyCPU\Debug\Content\consolas.xnb
@@ -25,4 +23,4 @@ D:\GameDev\.NET Projects\ProjectClove\ProjectSkelAnimator\bin\DesktopGL\AnyCPU\D
 D:\GameDev\.NET Projects\ProjectClove\ProjectSkelAnimator\bin\DesktopGL\AnyCPU\Debug\Microsoft.Xna.Framework.Storage.xml
 D:\GameDev\.NET Projects\ProjectClove\ProjectSkelAnimator\bin\DesktopGL\AnyCPU\Debug\Microsoft.Xna.Framework.xml
 D:\GameDev\.NET Projects\ProjectClove\ProjectSkelAnimator\bin\DesktopGL\AnyCPU\Debug\Content\data\File.xnb
-D:\GameDev\.NET Projects\ProjectClove\ProjectSkelAnimator\bin\DesktopGL\AnyCPU\Debug\Content\gfx\texPrototype2.xnb
+D:\GameDev\.NET Projects\ProjectClove\ProjectSkelAnimator\bin\DesktopGL\AnyCPU\Debug\Content\gfx\tex0.xnb

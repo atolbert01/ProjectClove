@@ -103,12 +103,6 @@ namespace ProjectSkelAnimator
                 Vector2 textPosition = new Vector2(animGroupTextPos.X + 20, 152 + ((consolas.LineSpacing + 2) * (i+ 1)));
                 animGroupTextFields = AddNewTextField(animGroupTextFields, textPosition);
             }
-            textFields[0] = textBoundsX = new TextField(consolas, new Vector2(16, GraphicsDevice.Viewport.Height - 80), currentAnimation.Bounds.X.ToString(), "Bounds X:", 12, pixelTexture);
-            textFields[1] = textBoundsY = new TextField(consolas, new Vector2(128, GraphicsDevice.Viewport.Height - 80), currentAnimation.Bounds.Y.ToString(), "Bounds Y:", 12, pixelTexture);
-            textFields[2] = textBoundsWidth = new TextField(consolas, new Vector2(240, GraphicsDevice.Viewport.Height - 80), currentAnimation.Bounds.Y.ToString(), "Bounds Width:", 12, pixelTexture);
-            textFields[3] = textBoundsHeight = new TextField(consolas, new Vector2(352, GraphicsDevice.Viewport.Height - 80), currentAnimation.Bounds.Y.ToString(), "Bounds Height:", 12, pixelTexture);
-            textFields[4] = textTweenFrames = new TextField(consolas, new Vector2(112, 32), "1", "Tween Frames:", 12, pixelTexture);
-            textFields[5] = textScript = new TextField(consolas, new Vector2(GraphicsDevice.Viewport.Width/2 + 128, 32), currentFrame.Script, "Script:" , 120, pixelTexture);
 
             cursor = new Cursor(cursorTexture, graphics, currentFrame, consolas);
             cursor.Load();
@@ -149,6 +143,13 @@ namespace ProjectSkelAnimator
 
             partsPalette = new PartsPalette(partTextures, transparentTexture, graphics);
             partsPalette.Load();
+
+            textFields[0] = textBoundsX = new TextField(consolas, new Vector2(16, GraphicsDevice.Viewport.Height - (partsPalette.GridSize + 16)), currentAnimation.Bounds.X.ToString(), "Bounds X:", 12, pixelTexture);
+            textFields[1] = textBoundsY = new TextField(consolas, new Vector2(128, GraphicsDevice.Viewport.Height - (partsPalette.GridSize + 16)), currentAnimation.Bounds.Y.ToString(), "Bounds Y:", 12, pixelTexture);
+            textFields[2] = textBoundsWidth = new TextField(consolas, new Vector2(240, GraphicsDevice.Viewport.Height - (partsPalette.GridSize + 16)), currentAnimation.Bounds.Y.ToString(), "Bounds Width:", 12, pixelTexture);
+            textFields[3] = textBoundsHeight = new TextField(consolas, new Vector2(352, GraphicsDevice.Viewport.Height - (partsPalette.GridSize + 16)), currentAnimation.Bounds.Y.ToString(), "Bounds Height:", 12, pixelTexture);
+            textFields[4] = textTweenFrames = new TextField(consolas, new Vector2(112, 32), "1", "Tween Frames:", 12, pixelTexture);
+            textFields[5] = textScript = new TextField(consolas, new Vector2(GraphicsDevice.Viewport.Width / 2 + 128, 32), currentFrame.Script, "Script:", 120, pixelTexture);
         }
 
         void LoadEyeButtons()
@@ -174,7 +175,7 @@ namespace ProjectSkelAnimator
         {
             try
             {
-                partTextures[textureCounter] = Content.Load<Texture2D>("gfx/texPrototype" + textureCounter);
+                partTextures[textureCounter] = Content.Load<Texture2D>("gfx/tex" + textureCounter);
                 textureCounter++;
                 return textureCounter;
             }

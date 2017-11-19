@@ -5,6 +5,7 @@ namespace ProjectClove
     public enum PlayerState { StandR, StandL, RunR, RunL }
     class Player : GameActor
     {
+        public Vector2 MoveDist { get; set; }
         private PlayerState _state;
         //private GameState _gameState;
         public PlayerState State
@@ -33,6 +34,7 @@ namespace ProjectClove
             _input = input;
             NewLogEntry = new TestLogEntry(null, State.GetHashCode());
             LogList.Add(NewLogEntry);
+            MoveDist = new Vector2(6, 0);
         }
 
         public override void Update(GameTime gameTime, GameState gameState)
@@ -99,26 +101,30 @@ namespace ProjectClove
                     Anim = Animations[2];
                     break;
                 case PlayerState.RunR:
-                    if (BoundingBox.X < (1914 * ImageScale) - BoundingBox.Width)
-                    {
-                        Move(new Vector2(6, 0));
-                        Anim = Animations[1];
-                    }
-                    else
-                    {
-                        Anim = Animations[0];
-                    }
+                    Move(MoveDist);
+                    Anim = Animations[1];
+                    //if (BoundingBox.X < (1914 * ImageScale) - BoundingBox.Width)
+                    //{
+                    //    Move(new Vector2(6, 0));
+                    //    Anim = Animations[1];
+                    //}
+                    //else
+                    //{
+                    //    Anim = Animations[0];
+                    //}
                     break;
                 case PlayerState.RunL:
-                    if (BoundingBox.X > 6)
-                    {
-                        Move(new Vector2(-6, 0));
-                        Anim = Animations[3];
-                    }
-                    else
-                    {
-                        Anim = Animations[2];
-                    }
+                    Move(-MoveDist);
+                    Anim = Animations[3];
+                    //if (BoundingBox.X > 6)
+                    //{
+                    //    Move(new Vector2(-6, 0));
+                    //    Anim = Animations[3];
+                    //}
+                    //else
+                    //{
+                    //    Anim = Animations[2];
+                    //}
                     break;
             }
 

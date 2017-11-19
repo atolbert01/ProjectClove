@@ -14,7 +14,8 @@ namespace ProjectClove
         public Level CurrentLevel { get; set; }
         public int RoomWidth { get; set; }
         public int RoomHeight { get; set; }
-        private int _boundsWidth, _boundsHeight;
+        private int _windowSizeHor = 360;
+        private int _boundsWidth, _boundsHeight, _camX, _camY;
         private Player _player;
         public Rectangle BoundingBox
         {
@@ -30,12 +31,52 @@ namespace ProjectClove
 
             zoom = imageScale;
             Rotation = 0.0f;
-            Position = Vector2.Zero;
             CurrentLevel = currentLevel;
 
             RoomWidth = _boundsWidth * CurrentLevel.CurrentRoom.Width;
             RoomHeight = _boundsHeight * CurrentLevel.CurrentRoom.Height;
-            //Position = new Vector2(RoomWidth/2, RoomHeight/2);
+            _windowSizeHor = (int)(_imageScale * _windowSizeHor);
+
+
+            _camY = (int)_player.Position.Y;
+            SetDefaultCamPos();
+            Position = PlayerRelativePos();
+        }
+
+        public void SetDefaultCamPos()
+        {
+            if (_player.Position.X  > _boundsWidth * 0.5
+                        && _player.Position.X < RoomWidth - (_boundsWidth * 0.5))
+            {
+                _camX = (int)_player.Position.X;
+            }
+            else if (_player.Position.X < _boundsWidth * 0.5)
+            {
+                _camX = (int)(_boundsWidth * 0.5);
+            }
+            else if (_player.Position.X > RoomWidth - (_boundsWidth * 0.5))
+            {
+                _camX = (int)(RoomWidth - (_boundsWidth * 0.5));
+            }
+        }
+        public Vector2 PlayerRelativePos()
+        {
+            Vector2 newPos;
+
+            if (_player.Position.X + _windowSizeHor > _boundsWidth * 0.5  && _player.Position.X - _windowSizeHor < RoomWidth - (_boundsWidth * 0.5))
+            {
+                if (_camX < (int)_player.Position.X - _windowSizeHor)
+                {
+                    _camX = (int)MathHelper.Lerp(_player.Position.X - _windowSizeHor, _camX, 0.3f);
+                }
+                else if (_camX > (int)_player.Position.X + _windowSizeHor)
+                {
+                    _camX = (int)MathHelper.Lerp(_camX, _player.Position.X + _windowSizeHor, 0.3f);
+                }
+            }
+            
+            newPos = new Vector2(_camX, _camY);
+            return newPos;
         }
 
         public void Update(GameState gameState, InputManager input)
@@ -43,7 +84,7 @@ namespace ProjectClove
             switch (gameState)
             {
                 case GameState.Play:
-                    Position = _player.Position;
+                    Position = PlayerRelativePos();
                     break;
                 case GameState.Playtest:
                     break;

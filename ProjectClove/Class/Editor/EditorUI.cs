@@ -56,12 +56,12 @@ namespace ProjectClove
         {
             foreach (Rectangle rect in _horzGridRects)
             {
-                spriteBatch.Draw(_pixelTexture, rect, Color.LightGray * 0.5f);
+                spriteBatch.Draw(_pixelTexture, rect, Color.DarkGray * 0.5f);
             }
 
             foreach (Rectangle rect in _vertGridRects)
             {
-                spriteBatch.Draw(_pixelTexture, rect, Color.LightGray * 0.5f);
+                spriteBatch.Draw(_pixelTexture, rect, Color.DarkGray * 0.5f);
             }
 
             foreach (Rectangle rect in _boundaryRects)

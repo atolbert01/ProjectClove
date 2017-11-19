@@ -13,7 +13,7 @@ namespace ProjectSkelAnimator
         Texture2D transparentTexture;
         GraphicsDeviceManager graphics;
         public Vector2 Scroll;
-        int gridSize = 64;
+        public int GridSize = 90;
         int totalParts = 0; // we'll use this to determine how many source and destination rectangles to make.
 
         public PartsPalette(Texture2D[] textures, Texture2D transparentTexture, GraphicsDeviceManager graphics)
@@ -27,8 +27,8 @@ namespace ProjectSkelAnimator
             {
                 if (tex != null)
                 {
-                    int rows = tex.Height / gridSize;
-                    int columns = tex.Width / gridSize;
+                    int rows = tex.Height / GridSize;
+                    int columns = tex.Width / GridSize;
                     totalParts += rows * columns;
                 }
             }
@@ -38,16 +38,16 @@ namespace ProjectSkelAnimator
         public void Load()
         {
             // Set up panel background
-            panelRectangle = new Rectangle(0, graphics.GraphicsDevice.Viewport.Bounds.Height - gridSize, 16, 16);
+            panelRectangle = new Rectangle(0, graphics.GraphicsDevice.Viewport.Bounds.Height - GridSize, 16, 16);
 
             // Identify part source rectangles
-            if (textures[0] != null){sourceRectangles = base.SliceSourceRectangles(textures, gridSize, totalParts);}
+            if (textures[0] != null){sourceRectangles = base.SliceSourceRectangles(textures, GridSize, totalParts);}
 
             // Initialize parts
             parts = new Part[sourceRectangles.Length];
             for (int i = 0; i < sourceRectangles.Length; i++)
             {
-                Part newPart = new Part(sourceRectangles[i].Texture, sourceRectangles[i].SourceRect, new Rectangle(i * (gridSize / 2) + (gridSize / 2), graphics.GraphicsDevice.Viewport.Bounds.Height - (gridSize / 2), gridSize / 2, gridSize / 2));
+                Part newPart = new Part(sourceRectangles[i].Texture, sourceRectangles[i].SourceRect, new Rectangle(i * (GridSize / 2) + (GridSize / 2), graphics.GraphicsDevice.Viewport.Bounds.Height - (GridSize / 2), GridSize / 2, GridSize / 2));
                 newPart.State = PartState.Preview;
                 parts[i] = newPart;
             }
@@ -76,7 +76,7 @@ namespace ProjectSkelAnimator
             // Draw the panel background
             for (int i = 0; i < (graphics.GraphicsDevice.Viewport.Width / 16); i++)
             {
-                for (int j = 0; j < ((graphics.GraphicsDevice.Viewport.Height - gridSize) / 16); j++)
+                for (int j = 0; j < ((graphics.GraphicsDevice.Viewport.Height - GridSize) / 16); j++)
                 {
                     spriteBatch.Draw(transparentTexture, new Rectangle(panelRectangle.X + (i * 16), panelRectangle.Y + (j * 16), panelRectangle.Width, panelRectangle.Height), Color.White);
                 }

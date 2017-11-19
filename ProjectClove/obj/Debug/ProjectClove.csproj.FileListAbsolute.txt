@@ -23,3 +23,5 @@ D:\GameDev\.NET Projects\ProjectClove\ProjectClove\bin\DesktopGL\AnyCPU\Debug\Co
 D:\GameDev\.NET Projects\ProjectClove\ProjectClove\bin\DesktopGL\AnyCPU\Debug\Content\data\man2.anim
 D:\GameDev\.NET Projects\ProjectClove\ProjectClove\bin\DesktopGL\AnyCPU\Debug\Content\clovetype.xnb
 D:\GameDev\.NET Projects\ProjectClove\ProjectClove\bin\DesktopGL\AnyCPU\Debug\Content\gfx\uieditor.xnb
+D:\GameDev\.NET Projects\ProjectClove\ProjectClove\bin\DesktopGL\AnyCPU\Debug\Content\gfx\terrain.xnb
+D:\GameDev\.NET Projects\ProjectClove\ProjectClove\bin\DesktopGL\AnyCPU\Debug\Content\gfx\cursor.xnb
