@@ -79,6 +79,39 @@ namespace ProjectClove
             return newPos;
         }
 
+        public void HandleInput(InputManager input)
+        {
+            if (input.PanL)
+            {
+                if (Position.X > 0)
+                {
+                    Move(new Vector2(-16, 0) * _imageScale); 
+                }
+            }
+            else if (input.PanR)
+            {
+                if (Position.X < RoomWidth)
+                {
+                    Move(new Vector2(16, 0) * _imageScale);
+                }
+            }
+
+            if (input.PanU)
+            {
+                if (Position.Y > 0)
+                {
+                    Move(new Vector2(0, -16) * _imageScale);
+                }
+            }
+            else if (input.PanD)
+            {
+                if (Position.Y < RoomHeight)
+                {
+                    Move(new Vector2(0, 16) * _imageScale);
+                }
+            }
+        }
+
         public void Update(GameState gameState, InputManager input)
         {
             switch (gameState)
@@ -91,35 +124,7 @@ namespace ProjectClove
                 case GameState.RunLog:
                     break;
                 case GameState.Edit:
-                    if (input.Left)
-                    {
-                        if (Position.X > 0)
-                        {
-                            Move(new Vector2(-16, 0) * _imageScale); //*_imageScale
-                        }
-                    }
-                    else if (input.Right)
-                    {
-                        if (Position.X < RoomWidth)
-                        {
-                            Move(new Vector2(16, 0) * _imageScale);
-                        }
-                    }
-
-                    if (input.Up)
-                    {
-                        if (Position.Y > 0)
-                        {
-                            Move(new Vector2(0, -16) * _imageScale); //*_imageScale
-                        }
-                    }
-                    else if (input.Down)
-                    {
-                        if (Position.Y < RoomHeight)
-                        {
-                            Move(new Vector2(0, 16) * _imageScale);
-                        }
-                    }
+                    HandleInput(input);
                     break;
             }
         }

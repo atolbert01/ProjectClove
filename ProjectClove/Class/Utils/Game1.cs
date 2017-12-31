@@ -21,11 +21,12 @@ namespace ProjectClove
         Level[] levels;
         Level currentLevel;
         Player player;
+        Terrain grayBox;
         GameState gameState;
         InputManager input;
         SpriteFont clovetype;
         EditorUI editor;
-        Texture2D pixelTexture, uiEditorTexture;
+        Texture2D pixelTexture, uiEditorTexture, terrainTexture;
         Camera2D camera;
         float imageScale;
 
@@ -95,12 +96,13 @@ namespace ProjectClove
             clovetype = Content.Load<SpriteFont>("clovetype");
 
             uiEditorTexture = Content.Load<Texture2D>("gfx/uieditor");
-
+            terrainTexture = Content.Load<Texture2D>("gfx/terrain");
             pixelTexture = new Texture2D(GraphicsDevice, 1, 1);
             pixelTexture.SetData(new Color[] { Color.White });
 
             Texture2D man1Tex = Content.Load<Texture2D>("gfx/man1");
             player = new Player(ParseAnimFiles("man2", man1Tex), imageScale, new Vector2(800, 600) * imageScale, input);
+            grayBox = new Terrain(terrainTexture, new Vector2(810, 720) * imageScale, new Rectangle(0, 0, 90, 90), imageScale);
             currentLevel.Rooms.Add(0, new Room(0));
             currentLevel.CurrentRoom = currentLevel.Rooms[0];
             currentLevel.CurrentRoom.Layers = new Layer[2];
@@ -108,6 +110,9 @@ namespace ProjectClove
             currentLevel.CurrentRoom.Layers[1] = new Layer();
             currentLevel.CurrentRoom.Layers[0].Actors = new GameActor[1];
             currentLevel.CurrentRoom.Layers[0].Actors[0] = player;
+            currentLevel.CurrentRoom.Layers[0].TerrainTiles = new Terrain[6];
+            currentLevel.CurrentRoom.Layers[0].TerrainTiles[0] = grayBox;
+
             currentLevel.CurrentRoom.Layers[1].Actors = new GameActor[1];
 
             camera = new Camera2D(imageScale, currentLevel, player);

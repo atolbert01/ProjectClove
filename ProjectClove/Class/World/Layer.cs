@@ -9,10 +9,12 @@ namespace ProjectClove
     class Layer
     {
         public GameActor[] Actors { get; set; }
+        public Terrain[] TerrainTiles { get; set; }
 
         public Layer()
         {
             Actors = new GameActor[1];
+            TerrainTiles = new Terrain[1];
         }
 
         public void Update(GameTime gameTime, GameState gameState)
@@ -33,6 +35,14 @@ namespace ProjectClove
                 if (actor != null)
                 {
                     actor.Draw(spriteBatch);
+                }
+            }
+
+            foreach (Terrain t in TerrainTiles)
+            {
+                if (t != null)
+                {
+                    t.Draw(spriteBatch);
                 }
             }
         }

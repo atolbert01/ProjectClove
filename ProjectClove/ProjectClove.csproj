@@ -67,6 +67,7 @@
     <Compile Include="Class\Game Objects\GameActor.cs" />
     <Compile Include="Class\Animation\Animation.cs" />
     <Compile Include="Class\Animation\Frame.cs" />
+    <Compile Include="Class\Game Objects\Terrain.cs" />
     <Compile Include="Class\Utils\Camera2D.cs" />
     <Compile Include="Class\Utils\Game1.cs" />
     <Compile Include="Class\Utils\InputManager.cs" />
