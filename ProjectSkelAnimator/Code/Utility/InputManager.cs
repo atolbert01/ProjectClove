@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace ProjectSkelAnimator
+namespace ProjectCloveAnimator
 {
     class InputManager
     {
@@ -10,7 +10,7 @@ namespace ProjectSkelAnimator
         public MouseState MouseState { get; set; }
         public AnimationGroup AnimGroup { get; set; }
         public Camera2D Camera { get; set; }
-        private Animation _currentAnimation;
+        private Animation currentAnimation;
         public InputManager(AnimationGroup animGroup, Camera2D camera)
         {
             AnimGroup = animGroup;
@@ -22,11 +22,11 @@ namespace ProjectSkelAnimator
             KeyState = Keyboard.GetState();
             AnimGroup = animGroup;
             Camera = camera;
-            _currentAnimation = animGroup.CurrentAnimation;
+            currentAnimation = animGroup.CurrentAnimation;
             if (KeyState.IsKeyDown(Keys.NumPad4))
             {
                 //camera.Position += new Vector2(-4, 0);
-                foreach (Frame frame in _currentAnimation.Frames)
+                foreach (Frame frame in currentAnimation.Frames)
                 {
                     foreach (Part part in frame.Parts)
                     {
@@ -37,7 +37,7 @@ namespace ProjectSkelAnimator
             else if (KeyState.IsKeyDown(Keys.NumPad6))
             {
                 //camera.Position += new Vector2(4, 0);
-                foreach (Frame frame in _currentAnimation.Frames)
+                foreach (Frame frame in currentAnimation.Frames)
                 {
                     foreach (Part part in frame.Parts)
                     {
@@ -49,7 +49,7 @@ namespace ProjectSkelAnimator
             if (KeyState.IsKeyDown(Keys.NumPad8))
             {
                 //camera.Position += new Vector2(0, -4);
-                foreach (Frame frame in _currentAnimation.Frames)
+                foreach (Frame frame in currentAnimation.Frames)
                 {
                     foreach (Part part in frame.Parts)
                     {
@@ -60,7 +60,7 @@ namespace ProjectSkelAnimator
             else if (KeyState.IsKeyDown(Keys.NumPad2))
             {
                 //camera.Position += new Vector2(0, 4);
-                foreach (Frame frame in _currentAnimation.Frames)
+                foreach (Frame frame in currentAnimation.Frames)
                 {
                     foreach (Part part in frame.Parts)
                     {

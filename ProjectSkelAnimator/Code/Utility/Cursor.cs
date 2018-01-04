@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace ProjectSkelAnimator
+namespace ProjectCloveAnimator
 {
     enum CursorState { Arrow, OpenHand, ClosedHand, AdjustBounds, Pencil, Eraser, Translate, Rotate, TextEdit };
     class Cursor : Sliceable
@@ -12,6 +12,7 @@ namespace ProjectSkelAnimator
         public Rectangle BoundsRect { get; set; }
         public Frame Frame { get; set; }
         public bool IsOutOfBounds { get; set; }
+        public bool ShowToolTip { get; set; }
         public TextField EditingField { get; set; }
         public string Text { get; set; }
         public MouseState MouseState { get; set; }
@@ -23,6 +24,7 @@ namespace ProjectSkelAnimator
         public Part SelectedPart { get; set; }
         public Part StandbyPart { get; set; }
         public SourceRectangleInfo[] SourceRectangles { get; set; }
+        public ToolTip Tip { get; set; }
         public int IDCount = 0;
         Texture2D cursorTexture;
         GraphicsDeviceManager graphics;
@@ -38,11 +40,13 @@ namespace ProjectSkelAnimator
         string helpText = "A = Arrow | D = Draw | E = Erase | F = Transpose | R = Rotate";
         string helpText2 = "Left = Select Previous Part | Right = Select Next Part | Up = Increase Draw Order | Down = Decrease Draw Order";
 
-        public Cursor(Texture2D cursorTexture, GraphicsDeviceManager graphics, Frame frame, SpriteFont consolas)
+        public Cursor(Texture2D cursorTexture, GraphicsDeviceManager graphics, Frame frame, SpriteFont consolas, Texture2D pixelTex)
         {
             this.cursorTexture = cursorTexture;
             this.graphics = graphics;
             this.consolas = consolas;
+            ShowToolTip = false;
+            Tip = new ToolTip(pixelTex, "", consolas);
             Frame = frame;
             IsOutOfBounds = false;
         }
@@ -62,6 +66,8 @@ namespace ProjectSkelAnimator
             MouseState = Mouse.GetState();
             KeyState = Keyboard.GetState();
             DestRect = new Rectangle(MouseState.X, MouseState.Y, 1, 1);
+
+            Tip.Update(new Vector2(MouseState.X + SourceRectangles[(int)State].SourceRect.Width, MouseState.Y + SourceRectangles[(int)State].SourceRect.Height));
 
             if (Frame != null)
             {
@@ -286,6 +292,7 @@ namespace ProjectSkelAnimator
             }
 
             // Draw the cursor.
+            if (ShowToolTip) { Tip.Draw(spriteBatch); }
             spriteBatch.Draw(cursorTexture, new Vector2(DestRect.X, DestRect.Y), SourceRectangles[(int)State].SourceRect, Color.White, 0f, new Vector2(0, 0), 1, SpriteEffects.None, 0f);
         }
     }

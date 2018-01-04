@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.IO;
 
-namespace ProjectSkelAnimator
+namespace ProjectCloveAnimator
 {
     /// <summary>
     /// This is the main type for your game.
@@ -15,7 +15,7 @@ namespace ProjectSkelAnimator
         SpriteBatch spriteBatch;
         InputManager input;
         Camera2D camera;
-        SpriteFont consolas;
+        SpriteFont consolas, leelawadee;
         Texture2D[] partTextures;
         Texture2D cursorTexture, transparentTexture, pixelTexture;
         PartsPalette partsPalette;
@@ -54,7 +54,8 @@ namespace ProjectSkelAnimator
         {
 
             base.Initialize();
-            
+            //Console.WriteLine(graphics.GraphicsDevice.DisplayMode.Width);
+            //Console.WriteLine(graphics.GraphicsDevice.DisplayMode.Height);
             //graphics.PreferredBackBufferWidth = 1200;
             //graphics.PreferredBackBufferHeight = 720;
             //graphics.ApplyChanges();
@@ -85,7 +86,8 @@ namespace ProjectSkelAnimator
             transparentTexture = Content.Load<Texture2D>("gfx/transparency");
             cursorTexture = Content.Load<Texture2D>("gfx/cursors");
             consolas = Content.Load<SpriteFont>("consolas");
-            
+            leelawadee = Content.Load<SpriteFont>("leelawadee");
+
             textFields = new TextField[32];
 
             Vector2 animGroupTextPos = new Vector2(16, 128);
@@ -97,7 +99,7 @@ namespace ProjectSkelAnimator
                 animGroupTextFields = AddNewTextField(animGroupTextFields, textPosition);
             }
 
-            cursor = new Cursor(cursorTexture, graphics, currentFrame, consolas);
+            cursor = new Cursor(cursorTexture, graphics, currentFrame, leelawadee, pixelTexture);
             cursor.Load();
 
             input = new InputManager(animGroup, camera);
@@ -114,7 +116,7 @@ namespace ProjectSkelAnimator
             dupAnimButton = new NewFrameButton(cursorTexture, new Rectangle(120, 144, 16, 16), currentAnimation);
             animUpButton = new UpButton(cursorTexture, new Rectangle( 40, 144, 16, 16), currentAnimation);
             animDownButton = new DownButton(cursorTexture, new Rectangle(16, 144, 16, 16), currentAnimation);
-
+            
             paletteLeftButton = new LeftButton(cursorTexture, new Rectangle(0, GraphicsDevice.Viewport.Height - 44, 24, 24), currentAnimation);
             paletteRightButton = new RightButton(cursorTexture, new Rectangle(GraphicsDevice.Viewport.Width - 24, GraphicsDevice.Viewport.Height - 44, 24, 24), currentAnimation);
 
@@ -588,9 +590,9 @@ namespace ProjectSkelAnimator
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.LightSlateGray);
             //spriteBatch.Begin();
-            spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, camera.Get_Transformation(GraphicsDevice));
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, null, null, null, camera.Get_Transformation(GraphicsDevice));
 
 
             partsPalette.Draw(spriteBatch);

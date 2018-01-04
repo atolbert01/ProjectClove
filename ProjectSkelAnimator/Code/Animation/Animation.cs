@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace ProjectSkelAnimator
+namespace ProjectCloveAnimator
 {
     /// <summary>
     /// The Animation class is functionally similar to the Frame class, but is mainly just a data structure for storing our animation frames. 

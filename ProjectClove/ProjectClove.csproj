@@ -60,35 +60,34 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Class\Editor\EditorUI.cs" />
-    <Compile Include="Class\Editor\Label.cs" />
-    <Compile Include="Class\Editor\UIButton.cs" />
-    <Compile Include="Class\Editor\UITextBox.cs" />
-    <Compile Include="Class\Game Objects\GameActor.cs" />
-    <Compile Include="Class\Animation\Animation.cs" />
-    <Compile Include="Class\Animation\Frame.cs" />
-    <Compile Include="Class\Game Objects\Terrain.cs" />
-    <Compile Include="Class\Utils\Camera2D.cs" />
-    <Compile Include="Class\Utils\Game1.cs" />
-    <Compile Include="Class\Utils\InputManager.cs" />
-    <Compile Include="Class\Editor\ObjectPanel.cs" />
-    <Compile Include="Class\Editor\TerrainPanel.cs" />
-    <Compile Include="Class\Utils\TestLogEntry.cs" />
-    <Compile Include="Class\World\Layer.cs" />
-    <Compile Include="Class\World\Level.cs" />
-    <Compile Include="Class\Game Objects\Player.cs" />
-    <Compile Include="Class\Game Objects\Sprite.cs" />
-    <Compile Include="Class\Utils\Program.cs" />
+    <Compile Include="Code\Editor\EditorUI.cs" />
+    <Compile Include="Code\Editor\Label.cs" />
+    <Compile Include="Code\Editor\UIButton.cs" />
+    <Compile Include="Code\Editor\UITextBox.cs" />
+    <Compile Include="Code\Game Objects\GameActor.cs" />
+    <Compile Include="Code\Animation\Animation.cs" />
+    <Compile Include="Code\Animation\Frame.cs" />
+    <Compile Include="Code\Game Objects\Terrain.cs" />
+    <Compile Include="Code\Utils\Camera2D.cs" />
+    <Compile Include="Code\Utils\Game1.cs" />
+    <Compile Include="Code\Utils\InputManager.cs" />
+    <Compile Include="Code\Editor\ObjectPanel.cs" />
+    <Compile Include="Code\Editor\TerrainPanel.cs" />
+    <Compile Include="Code\Utils\TestLogEntry.cs" />
+    <Compile Include="Code\World\Layer.cs" />
+    <Compile Include="Code\World\Level.cs" />
+    <Compile Include="Code\Game Objects\Player.cs" />
+    <Compile Include="Code\Game Objects\Sprite.cs" />
+    <Compile Include="Code\Utils\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Class\World\Room.cs" />
-    <Compile Include="Class\Editor\UtilityPanel.cs" />
+    <Compile Include="Code\World\Room.cs" />
+    <Compile Include="Code\Editor\UtilityPanel.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />

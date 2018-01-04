@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace ProjectSkelAnimator
+namespace ProjectCloveAnimator
 {
     enum PartState { Preview, Selected, Idle };
     class Part

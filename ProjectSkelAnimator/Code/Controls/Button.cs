@@ -1,9 +1,8 @@
-﻿using System;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 
-namespace ProjectSkelAnimator
+namespace ProjectCloveAnimator
 {
     class Button : Sliceable
     {
@@ -18,6 +17,7 @@ namespace ProjectSkelAnimator
         public bool IsCursorIntersect { get; set; }
         public int GridSize = 16;
         public Color Tint = Color.White;
+        public string TipText { get; set; }
         SourceRectangleInfo[] SourceRectangles;
         public Button(Texture2D texture, Rectangle destRect, Animation currentAnimation)
         {
@@ -26,6 +26,7 @@ namespace ProjectSkelAnimator
             CurrentAnimation = CurrentAnimation;
             IsClicked = false;
             IsCursorIntersect = false;
+            TipText = "";
 
         }
         public void Update(Cursor cursor, Animation currentAnimation)
@@ -40,6 +41,11 @@ namespace ProjectSkelAnimator
                 }
                 IsCursorIntersect = true;
                 Cursor.State = CursorState.Arrow;
+                if (TipText != "")
+                {
+                    Cursor.Tip.Text = TipText;
+                    Cursor.ShowToolTip = true;
+                }
             }
             else if (!Cursor.DestRect.Intersects(DestRect))
             {
@@ -47,6 +53,7 @@ namespace ProjectSkelAnimator
                 {
                     Cursor.State = Cursor.PrevState;
                     IsCursorIntersect = false;
+                    Cursor.ShowToolTip = false;
                 }
             }
 
@@ -78,6 +85,7 @@ namespace ProjectSkelAnimator
         {
             SourceIndex = 14;
             QuickClick = false;
+            base.TipText = "Play Animation";
         }
 
         public override void Execute()
@@ -98,6 +106,7 @@ namespace ProjectSkelAnimator
         {
             SourceIndex = 13;
             QuickClick = false;
+            base.TipText = "Pause Animation";
         }
     }
 
@@ -107,6 +116,7 @@ namespace ProjectSkelAnimator
         {
             SourceIndex = 15;
             QuickClick = true;
+            base.TipText = "Next Frame";
         }
 
         public override void Execute()
@@ -123,6 +133,7 @@ namespace ProjectSkelAnimator
         {
             SourceIndex = 12;
             QuickClick = true;
+            base.TipText = "Previous Frame";
         }
         public override void Execute()
         {
@@ -138,6 +149,7 @@ namespace ProjectSkelAnimator
         {
             SourceIndex = 18;
             QuickClick = true;
+            base.TipText = "Add New Animation Frame";
         }
 
         public override void Execute()
@@ -163,6 +175,7 @@ namespace ProjectSkelAnimator
         {
             SourceIndex = 19;
             QuickClick = true;
+            base.TipText = "Delete the current Animation Frame";
         }
 
         public override void Execute()
@@ -182,6 +195,7 @@ namespace ProjectSkelAnimator
         {
             SourceIndex = 16;
             QuickClick = true;
+            base.TipText = "Increase Frame duration";
         }
         public override void Execute()
         {
@@ -196,6 +210,7 @@ namespace ProjectSkelAnimator
         {
             SourceIndex = 17;
             QuickClick = true;
+            base.TipText = "Reduce Frame duration";
         }
 
         public override void Execute()
@@ -211,6 +226,7 @@ namespace ProjectSkelAnimator
         {
             SourceIndex = 16;
             QuickClick = true;
+            base.TipText = "Add a new Animation to AnimationGroup";
         }
     }
 
@@ -220,6 +236,7 @@ namespace ProjectSkelAnimator
         {
             SourceIndex = 17;
             QuickClick = true;
+            base.TipText = "Delete Animation from AnimationGroup";
         }
     }
 
@@ -229,6 +246,7 @@ namespace ProjectSkelAnimator
         {
             SourceIndex = 9;
             QuickClick = true;
+            base.TipText = "Toggle onion skinning";
         }
     }
 
@@ -240,6 +258,7 @@ namespace ProjectSkelAnimator
             SourceIndex = 10;
             QuickClick = true;
             TweenCount = 0;
+            base.TipText = "Tween frames";
         }
 
         public override void Execute()
@@ -313,6 +332,7 @@ namespace ProjectSkelAnimator
         {
             SourceIndex = 22;
             QuickClick = true;
+            base.TipText = "";
         }
     }
 
@@ -322,6 +342,7 @@ namespace ProjectSkelAnimator
         {
             SourceIndex = 23;
             QuickClick = true;
+            base.TipText = "";
         }
     }
 
@@ -331,6 +352,7 @@ namespace ProjectSkelAnimator
         {
             SourceIndex = 20;
             QuickClick = true;
+            base.TipText = "";
         }
     }
 
@@ -340,6 +362,7 @@ namespace ProjectSkelAnimator
         {
             SourceIndex = 21;
             QuickClick = true;
+            base.TipText = "";
         }
     }
 
@@ -349,6 +372,7 @@ namespace ProjectSkelAnimator
         {
             SourceIndex = 24;
             QuickClick = true;
+            base.TipText = "";
         }
     }
 
@@ -358,6 +382,7 @@ namespace ProjectSkelAnimator
         {
             SourceIndex = 25;
             QuickClick = true;
+            base.TipText = "";
         }
     }
 
@@ -367,6 +392,7 @@ namespace ProjectSkelAnimator
         {
             SourceIndex = 11;
             QuickClick = false;
+            base.TipText = "Show this Animation";
         }
     }
     /// <summary>

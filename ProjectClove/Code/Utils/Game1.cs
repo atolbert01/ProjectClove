@@ -171,7 +171,8 @@ namespace ProjectClove
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             //spriteBatch.Begin();
-            spriteBatch.Begin(SpriteSortMode.Immediate, null, null, null, null, null, camera.Get_Transformation(GraphicsDevice));
+            //spriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.LinearClamp, null, null, null, camera.Get_Transformation(GraphicsDevice));
+            spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.LinearWrap, DepthStencilState.Default, RasterizerState.CullNone, null, camera.Get_Transformation(GraphicsDevice));
             currentLevel.Draw(spriteBatch);
 
             switch (gameState)

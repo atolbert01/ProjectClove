@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ProjectSkelAnimator
+namespace ProjectCloveAnimator
 {
     /// <summary>
     /// The main class.

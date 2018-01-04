@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace ProjectSkelAnimator
+namespace ProjectCloveAnimator
 {
     /// <summary>
     /// Defines a set of Animations.
