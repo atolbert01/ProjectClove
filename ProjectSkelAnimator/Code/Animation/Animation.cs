@@ -44,18 +44,8 @@ namespace ProjectCloveAnimator
                     {
                         Bounds = cursor.BoundsRect;
                     }
-                    //else
-                    //{
-                    //    Bounds = new Rectangle(0, 0, 0, 0);
-                    //}
                 }
             }
-
-            //if (cursor.KeyState.IsKeyDown(Keys.Q) && cursor.PrevKeyState.IsKeyUp(Keys.Q)) { DrawBounds = !DrawBounds; }
-            //if (Frames.Length > 0)
-            //{
-            //    CurrentFrame = Frames[CurrentIndex];
-            //}
         }
 
         public void AddFrame(Frame newFrame)

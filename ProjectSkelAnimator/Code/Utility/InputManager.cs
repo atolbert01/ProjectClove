@@ -8,6 +8,7 @@ namespace ProjectCloveAnimator
         public KeyboardState KeyState{ get; set; }
         public KeyboardState PrevKeyState { get; set; }
         public MouseState MouseState { get; set; }
+        private Cursor cursor { get; set; }
         public AnimationGroup AnimGroup { get; set; }
         public Camera2D Camera { get; set; }
         private Animation currentAnimation;
@@ -17,75 +18,68 @@ namespace ProjectCloveAnimator
             Camera = camera;
         }
 
-        public void Update(AnimationGroup animGroup, Camera2D camera)
+        public void Update(Cursor cursor, AnimationGroup animGroup, Camera2D camera)
         {
             KeyState = Keyboard.GetState();
+            this.cursor = cursor;
             AnimGroup = animGroup;
             Camera = camera;
             currentAnimation = animGroup.CurrentAnimation;
-            if (KeyState.IsKeyDown(Keys.NumPad4))
+            if (cursor.State != CursorState.TextEdit)
             {
-                //camera.Position += new Vector2(-4, 0);
-                foreach (Frame frame in currentAnimation.Frames)
+                if (KeyState.IsKeyDown(Keys.NumPad4))
                 {
-                    foreach (Part part in frame.Parts)
+                    //camera.Position += new Vector2(-4, 0);
+                    foreach (Frame frame in currentAnimation.Frames)
                     {
-                        part.Position += new Vector2(-4, 0);
+                        foreach (Part part in frame.Parts)
+                        {
+                            part.Position += new Vector2(-4, 0);
+                        }
                     }
                 }
-            }
-            else if (KeyState.IsKeyDown(Keys.NumPad6))
-            {
-                //camera.Position += new Vector2(4, 0);
-                foreach (Frame frame in currentAnimation.Frames)
+                else if (KeyState.IsKeyDown(Keys.NumPad6))
                 {
-                    foreach (Part part in frame.Parts)
+                    //camera.Position += new Vector2(4, 0);
+                    foreach (Frame frame in currentAnimation.Frames)
                     {
-                        part.Position += new Vector2(4, 0);
+                        foreach (Part part in frame.Parts)
+                        {
+                            part.Position += new Vector2(4, 0);
+                        }
                     }
                 }
-            }
 
-            if (KeyState.IsKeyDown(Keys.NumPad8))
-            {
-                //camera.Position += new Vector2(0, -4);
-                foreach (Frame frame in currentAnimation.Frames)
+                if (KeyState.IsKeyDown(Keys.NumPad8))
                 {
-                    foreach (Part part in frame.Parts)
+                    //camera.Position += new Vector2(0, -4);
+                    foreach (Frame frame in currentAnimation.Frames)
                     {
-                        part.Position += new Vector2(0, -4);
+                        foreach (Part part in frame.Parts)
+                        {
+                            part.Position += new Vector2(0, -4);
+                        }
                     }
                 }
-            }
-            else if (KeyState.IsKeyDown(Keys.NumPad2))
-            {
-                //camera.Position += new Vector2(0, 4);
-                foreach (Frame frame in currentAnimation.Frames)
+                else if (KeyState.IsKeyDown(Keys.NumPad2))
                 {
-                    foreach (Part part in frame.Parts)
+                    //camera.Position += new Vector2(0, 4);
+                    foreach (Frame frame in currentAnimation.Frames)
                     {
-                        part.Position += new Vector2(0, 4);
+                        foreach (Part part in frame.Parts)
+                        {
+                            part.Position += new Vector2(0, 4);
+                        }
                     }
                 }
+                if (KeyState.IsKeyDown(Keys.OemPlus) && PrevKeyState.IsKeyUp(Keys.OemPlus)) { camera.Zoom += 0.25f; }
+                if (KeyState.IsKeyDown(Keys.OemMinus) && PrevKeyState.IsKeyUp(Keys.OemMinus)) { camera.Zoom -= 0.25f; }
+                if (KeyState.IsKeyDown(Keys.Q) && PrevKeyState.IsKeyUp(Keys.Q)) { animGroup.CurrentAnimation.DrawBounds = !animGroup.CurrentAnimation.DrawBounds; }
+                if (KeyState.IsKeyDown(Keys.W) && PrevKeyState.IsKeyUp(Keys.W))
+                {
+                    animGroup.DuplicateAnimation();
+                }
             }
-            if (KeyState.IsKeyDown(Keys.OemPlus) && PrevKeyState.IsKeyUp(Keys.OemPlus)) { camera.Zoom += 0.25f; }
-            if (KeyState.IsKeyDown(Keys.OemMinus) && PrevKeyState.IsKeyUp(Keys.OemMinus)) { camera.Zoom -= 0.25f; }
-            if (KeyState.IsKeyDown(Keys.Q) && PrevKeyState.IsKeyUp(Keys.Q)) { AnimGroup.CurrentAnimation.DrawBounds = !AnimGroup.CurrentAnimation.DrawBounds; }
-            //if (KeyState.IsKeyDown(Keys.W) && PrevKeyState.IsKeyUp(Keys.W))
-            //{
-            //    Animation newAnim = new Animation(pixelTexture);
-            //    newAnim.Bounds = new Rectangle(AnimGroup.CurrentAnimation.Bounds.X, AnimGroup.CurrentAnimation.Bounds.Y, AnimGroup.CurrentAnimation.Bounds.Width, AnimGroup.CurrentAnimation.Bounds.Height);
-            //    foreach (Frame frame in AnimGroup.CurrentAnimation.Frames)
-            //    {
-            //        newAnim.AddFrame(new Frame(frame, true, newAnim.Bounds.Center));
-            //    }
-            //    AnimGroup.AddAnimation(newAnim);
-            //    animGroupTextFields = AddNewTextField(animGroupTextFields, new Vector2(36, 152 + ((consolas.LineSpacing + 2) * AnimGroup.Animations.Length)));
-            //    if (animGroupTextFields[animGroup.Animations.Length - 1] != null)
-            //    {
-            //        LoadEyeButtons();
-            //    }
-            //}
 
             if (KeyState != null) { PrevKeyState = KeyState; }
         }

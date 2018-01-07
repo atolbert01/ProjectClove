@@ -12,6 +12,7 @@ namespace ProjectCloveAnimator
         public bool IsClicked { get; set; }
         public int SourceIndex { get; set; }
         public Cursor Cursor { get; set; }
+        public AnimationGroup AnimGroup { get; set; }
         public Animation CurrentAnimation { get; set; } // certain sub classes of Button will need to access the CurrentAnimation
         public bool QuickClick;
         public bool IsCursorIntersect { get; set; }
@@ -27,12 +28,12 @@ namespace ProjectCloveAnimator
             IsClicked = false;
             IsCursorIntersect = false;
             TipText = "";
-
         }
-        public void Update(Cursor cursor, Animation currentAnimation)
+        public void Update(Cursor cursor, AnimationGroup animGroup)
         {
             Cursor = cursor;
-            CurrentAnimation = currentAnimation;
+            AnimGroup = animGroup;
+            CurrentAnimation = AnimGroup.CurrentAnimation;
             if (Cursor.DestRect.Intersects(DestRect))
             {
                 if (!IsCursorIntersect)
@@ -184,8 +185,7 @@ namespace ProjectCloveAnimator
             if (CurrentAnimation.Frames.Length > 1)
             {
                 CurrentAnimation.RemoveFrame(CurrentAnimation.CurrentFrameIndex);
-                //CurrentAnimation.RemoveFrame(CurrentAnimation.CurrentFrame);
-            } // There will always be at least 1 frame.
+            }
         }
     }
 
@@ -228,6 +228,14 @@ namespace ProjectCloveAnimator
             QuickClick = true;
             base.TipText = "Add a new Animation to AnimationGroup";
         }
+
+        public override void Execute()
+        {
+            base.Execute();
+            AnimGroup.AddAnimation(new Animation(CurrentAnimation.PixelTexture));
+            AnimGroup.AddNewTextField(new Vector2(36, 152 + ((AnimGroup.TextFont.LineSpacing + 2) * AnimGroup.Animations.Length)), "animation" + AnimGroup.Animations.Length);
+            //animGroupTextFields = AddNewTextField(animGroupTextFields, new Vector2(36, 152 + ((consolas.LineSpacing + 2) * animGroup.Animations.Length)), "animation" + animGroup.Animations.Length);
+        }
     }
 
     class RemoveAnimButton : Button
@@ -237,6 +245,39 @@ namespace ProjectCloveAnimator
             SourceIndex = 17;
             QuickClick = true;
             base.TipText = "Delete Animation from AnimationGroup";
+        }
+        public override void Execute()
+        {
+            base.Execute();
+            AnimGroup.RemoveAnimation(AnimGroup.Animations[AnimGroup.Animations.Length - 1]);
+            AnimGroup.RemoveTextField();
+            if (AnimGroup.Animations.Length <= 0)
+            {
+                AnimGroup.AddAnimation(new Animation(CurrentAnimation.PixelTexture));
+                AnimGroup.AddNewTextField(new Vector2(36, 152 + ((AnimGroup.TextFont.LineSpacing + 2) * AnimGroup.Animations.Length)), "animation" + AnimGroup.Animations.Length);
+            }
+        }
+    }
+
+    class DuplicateAnimButton : Button
+    {
+        public DuplicateAnimButton(Texture2D texture, Rectangle destRect, Animation currentAnimation) : base(texture, destRect, currentAnimation)
+        {
+            SourceIndex = 18;
+            QuickClick = true;
+            base.TipText = "Duplicate the current Animation";
+        }
+        public override void Execute()
+        {
+            base.Execute();
+            Animation newAnim = new Animation(CurrentAnimation.PixelTexture);
+            newAnim.Bounds = new Rectangle(AnimGroup.CurrentAnimation.Bounds.X, AnimGroup.CurrentAnimation.Bounds.Y, AnimGroup.CurrentAnimation.Bounds.Width, AnimGroup.CurrentAnimation.Bounds.Height);
+            foreach (Frame frame in AnimGroup.CurrentAnimation.Frames)
+            {
+                newAnim.AddFrame(new Frame(frame, false, newAnim.Bounds.Center));
+            }
+            AnimGroup.AddAnimation(newAnim);
+            AnimGroup.AddNewTextField(new Vector2(36, 152 + ((AnimGroup.TextFont.LineSpacing + 2) * AnimGroup.Animations.Length)), "animation" + AnimGroup.Animations.Length);
         }
     }
 
@@ -366,6 +407,36 @@ namespace ProjectCloveAnimator
         }
     }
 
+    class PaletteLeftButton : Button
+    {
+        public PaletteLeftButton(Texture2D texture, Rectangle destRect, Animation currentAnimation) : base(texture, destRect, currentAnimation)
+        {
+            SourceIndex = 20;
+            QuickClick = true;
+            base.TipText = "";
+        }
+
+        public override void Execute()
+        {
+            base.Execute();
+        }
+    }
+
+    class PaletteRightButton : Button
+    {
+        public PaletteRightButton(Texture2D texture, Rectangle destRect, Animation currentAnimation) : base(texture, destRect, currentAnimation)
+        {
+            SourceIndex = 21;
+            QuickClick = true;
+            base.TipText = "";
+        }
+
+        public override void Execute()
+        {
+            base.Execute();
+        }
+    }
+
     class SaveButton : Button
     {
         public SaveButton(Texture2D texture, Rectangle destRect, Animation currentAnimation) : base(texture, destRect, currentAnimation)
@@ -418,7 +489,7 @@ namespace ProjectCloveAnimator
             }
         }
 
-        public void Update(Cursor cursor, Animation currentAnimation)
+        public void Update(Cursor cursor, AnimationGroup animGroup)
         {
             foreach (Button btn in Buttons)
             {
@@ -482,7 +553,7 @@ namespace ProjectCloveAnimator
                     {
                         btn.IsClicked = false;
                     }
-                    btn.Update(cursor, currentAnimation);
+                    btn.Update(cursor, animGroup);
                 }
             }
         }

@@ -35,7 +35,7 @@ namespace ProjectCloveAnimator
         string frameName = "Frame: ";
         string frameTicks = "Ticks: ";
         bool isOnionSkin = false;
-        //int tweenCount = 0;
+        int groupAnimCount = 0;
 
         public Game1()
         {
@@ -78,25 +78,25 @@ namespace ProjectCloveAnimator
             pixelTexture = new Texture2D(GraphicsDevice, 1, 1);
             pixelTexture.SetData(new Color[] { Color.White });
 
-            animGroup = new AnimationGroup(new Animation(pixelTexture));
-            currentAnimation = animGroup.CurrentAnimation;
-            currentAnimation.AddFrame(new Frame());
-            currentFrame = currentAnimation.CurrentFrame;
-
             transparentTexture = Content.Load<Texture2D>("gfx/transparency");
             cursorTexture = Content.Load<Texture2D>("gfx/cursors");
             consolas = Content.Load<SpriteFont>("consolas");
             leelawadee = Content.Load<SpriteFont>("leelawadee");
 
+            animGroup = new AnimationGroup(new Animation(pixelTexture), consolas, leelawadee);
+            currentAnimation = animGroup.CurrentAnimation;
+            currentAnimation.AddFrame(new Frame());
+            currentFrame = currentAnimation.CurrentFrame;
+
             textFields = new TextField[32];
 
             Vector2 animGroupTextPos = new Vector2(16, 128);
-            textAnimGroupName = new TextField(consolas, animGroupTextPos, "", "Animation Group:", 12, pixelTexture);
+            textAnimGroupName = new TextField(consolas, leelawadee, animGroupTextPos, "newgroup", "Animation Group:", 12, pixelTexture);
 
             for (int i = 0; i < animGroup.Animations.Length; i++)
             {
                 Vector2 textPosition = new Vector2(animGroupTextPos.X + 20, 152 + ((consolas.LineSpacing + 2) * (i+ 1)));
-                animGroupTextFields = AddNewTextField(animGroupTextFields, textPosition);
+                animGroup.AddNewTextField(textPosition, "animation" + animGroup.Animations.Length);
             }
 
             cursor = new Cursor(cursorTexture, graphics, currentFrame, leelawadee, pixelTexture);
@@ -113,12 +113,12 @@ namespace ProjectCloveAnimator
 
             addAnimButton = new AddAnimButton(cursorTexture, new Rectangle(96, 144, 16, 16), currentAnimation);
             removeAnimButton = new RemoveAnimButton(cursorTexture, new Rectangle(72, 144, 16, 16), currentAnimation);
-            dupAnimButton = new NewFrameButton(cursorTexture, new Rectangle(120, 144, 16, 16), currentAnimation);
+            dupAnimButton = new DuplicateAnimButton(cursorTexture, new Rectangle(120, 144, 16, 16), currentAnimation);
             animUpButton = new UpButton(cursorTexture, new Rectangle( 40, 144, 16, 16), currentAnimation);
             animDownButton = new DownButton(cursorTexture, new Rectangle(16, 144, 16, 16), currentAnimation);
             
-            paletteLeftButton = new LeftButton(cursorTexture, new Rectangle(0, GraphicsDevice.Viewport.Height - 44, 24, 24), currentAnimation);
-            paletteRightButton = new RightButton(cursorTexture, new Rectangle(GraphicsDevice.Viewport.Width - 24, GraphicsDevice.Viewport.Height - 44, 24, 24), currentAnimation);
+            paletteLeftButton = new PaletteLeftButton(cursorTexture, new Rectangle(0, GraphicsDevice.Viewport.Height - 44, 24, 24), currentAnimation);
+            paletteRightButton = new PaletteRightButton(cursorTexture, new Rectangle(GraphicsDevice.Viewport.Width - 24, GraphicsDevice.Viewport.Height - 44, 24, 24), currentAnimation);
 
             onionSkinButton = new OnionSkinButton(cursorTexture, new Rectangle((graphics.GraphicsDevice.Viewport.Width / 2) - 96, 16, 24, 24), currentAnimation);
             prevButton = new PrevButton(cursorTexture, new Rectangle((graphics.GraphicsDevice.Viewport.Width/2) - 64, 16, 24, 24), currentAnimation);
@@ -141,22 +141,24 @@ namespace ProjectCloveAnimator
             partsPalette = new PartsPalette(partTextures, transparentTexture, graphics);
             partsPalette.Load();
 
-            textFields[0] = textBoundsX = new TextField(consolas, new Vector2(16, GraphicsDevice.Viewport.Height - (partsPalette.GridSize + 16)), currentAnimation.Bounds.X.ToString(), "Bounds X:", 12, pixelTexture);
-            textFields[1] = textBoundsY = new TextField(consolas, new Vector2(128, GraphicsDevice.Viewport.Height - (partsPalette.GridSize + 16)), currentAnimation.Bounds.Y.ToString(), "Bounds Y:", 12, pixelTexture);
-            textFields[2] = textBoundsWidth = new TextField(consolas, new Vector2(240, GraphicsDevice.Viewport.Height - (partsPalette.GridSize + 16)), currentAnimation.Bounds.Y.ToString(), "Bounds Width:", 12, pixelTexture);
-            textFields[3] = textBoundsHeight = new TextField(consolas, new Vector2(352, GraphicsDevice.Viewport.Height - (partsPalette.GridSize + 16)), currentAnimation.Bounds.Y.ToString(), "Bounds Height:", 12, pixelTexture);
-            textFields[4] = textTweenFrames = new TextField(consolas, new Vector2(112, 32), "1", "Tween Frames:", 12, pixelTexture);
-            textFields[5] = textScript = new TextField(consolas, new Vector2(GraphicsDevice.Viewport.Width / 2 + 128, 32), currentFrame.Script, "Script:", 120, pixelTexture);
+            textFields[0] = textBoundsX = new TextField(consolas, leelawadee, new Vector2(16, GraphicsDevice.Viewport.Height - (partsPalette.GridSize + 16)), currentAnimation.Bounds.X.ToString(), "Bounds X:", 12, pixelTexture);
+            textFields[1] = textBoundsY = new TextField(consolas, leelawadee, new Vector2(128, GraphicsDevice.Viewport.Height - (partsPalette.GridSize + 16)), currentAnimation.Bounds.Y.ToString(), "Bounds Y:", 12, pixelTexture);
+            textFields[2] = textBoundsWidth = new TextField(consolas, leelawadee, new Vector2(240, GraphicsDevice.Viewport.Height - (partsPalette.GridSize + 16)), currentAnimation.Bounds.Y.ToString(), "Bounds Width:", 12, pixelTexture);
+            textFields[3] = textBoundsHeight = new TextField(consolas, leelawadee, new Vector2(352, GraphicsDevice.Viewport.Height - (partsPalette.GridSize + 16)), currentAnimation.Bounds.Y.ToString(), "Bounds Height:", 12, pixelTexture);
+            textFields[4] = textTweenFrames = new TextField(consolas, leelawadee, new Vector2(112, 32), "1", "Tween Frames:", 12, pixelTexture);
+            textFields[5] = textScript = new TextField(consolas, leelawadee, new Vector2(GraphicsDevice.Viewport.Width / 2 + 128, 32), currentFrame.Script, "Script:", 120, pixelTexture);
+
+            groupAnimCount = animGroup.Animations.Length;
         }
 
         void LoadEyeButtons()
         {
-            Button[] eyeButtons = new Button[animGroupTextFields.Length];
+            Button[] eyeButtons = new Button[animGroup.Animations.Length];
             for (int i = 0; i < eyeButtons.Length; i++)
             {
-                if (animGroupTextFields[i] != null)
+                if (animGroup.NameFields[i] != null)
                 {
-                    eyeButtons[i] = new EyeButton(cursorTexture, new Rectangle((int)animGroupTextFields[i].Position.X - 20, (int)animGroupTextFields[i].Position.Y - 1, 16, 16), currentAnimation);
+                    eyeButtons[i] = new EyeButton(cursorTexture, new Rectangle((int)animGroup.NameFields[i].Position.X - 20, (int)animGroup.NameFields[i].Position.Y - 1, 16, 16), currentAnimation);
                 }
             }
             eyeButtonPanel = new ButtonPanel(eyeButtons);
@@ -201,69 +203,41 @@ namespace ProjectCloveAnimator
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             KeyState = Keyboard.GetState();
-            //currentAnimation = animGroup.CurrentAnimation;
+            animGroup.Update(cursor);
+            currentAnimation = animGroup.CurrentAnimation;
             currentFrame = currentAnimation.CurrentFrame;
             cursor.Frame = currentFrame;
             cursor.Update();
-            buttonPanel.Update(cursor, currentAnimation);
-            eyeButtonPanel.Update(cursor, currentAnimation);
-            input.Update(animGroup, camera);
+            buttonPanel.Update(cursor, animGroup);
+            eyeButtonPanel.Update(cursor, animGroup);
+            input.Update(cursor, animGroup, camera);
             partsPalette.Update(cursor);
             if (currentFrame != null) { currentFrame.Update(cursor); }
             currentAnimation.Update(cursor);
-            //textScript.Text = currentAnimation.Frames[currentAnimation.CurrentFrameIndex].Script;
 
             if (onionSkinButton.IsClicked) { isOnionSkin = !isOnionSkin; }
             if (tweenButton.IsClicked) { tweenButton.TweenCount = Int32.Parse(textTweenFrames.Text); }
             if (saveButton.IsClicked) { SaveAnimation(); }
             if (loadButton.IsClicked) { LoadAnimation(); }
 
+            if (paletteLeftButton.IsClicked) { partsPalette.Scroll = new Vector2(8, 0); }
+            else if (paletteRightButton.IsClicked) { partsPalette.Scroll = new Vector2(-8, 0); }
+            else { partsPalette.Scroll = Vector2.Zero; }
 
-            if (paletteLeftButton.IsClicked)
+            // Did we add or remove an animation from the group between updates?
+            if (animGroup.Animations.Length != groupAnimCount)
             {
-                partsPalette.Scroll = new Vector2(8, 0);
-            }
-            else if (paletteRightButton.IsClicked)
-            {
-                partsPalette.Scroll = new Vector2(-8, 0);
-            }
-            else
-            {
-                partsPalette.Scroll = Vector2.Zero;
-            }
-
-            if (addAnimButton.IsClicked)
-            {
-                animGroup.AddAnimation(new Animation(pixelTexture));
-                animGroupTextFields = AddNewTextField(animGroupTextFields, new Vector2(36, 152 + ((consolas.LineSpacing + 2) * animGroup.Animations.Length)));
-                if (animGroupTextFields[animGroup.Animations.Length - 1] != null)
+                if (animGroup.Animations.Length > 0)
                 {
-                    LoadEyeButtons();
+                    if (animGroup.NameFields[animGroup.Animations.Length - 1] != null)
+                    {
+                        groupAnimCount = animGroup.Animations.Length;
+                        LoadEyeButtons();
+                    }
                 }
-            }
-
-            if (dupAnimButton.IsClicked)
-            {
-                Animation newAnim = new Animation(pixelTexture);
-                newAnim.Bounds = new Rectangle(animGroup.CurrentAnimation.Bounds.X, animGroup.CurrentAnimation.Bounds.Y, animGroup.CurrentAnimation.Bounds.Width, animGroup.CurrentAnimation.Bounds.Height);
-                foreach (Frame frame in animGroup.CurrentAnimation.Frames)
+                else
                 {
-                    newAnim.AddFrame(new Frame(frame, false, newAnim.Bounds.Center));
-                }
-                animGroup.AddAnimation(newAnim);
-                animGroupTextFields = AddNewTextField(animGroupTextFields, new Vector2(36, 152 + ((consolas.LineSpacing + 2) * animGroup.Animations.Length)));
-                if (animGroupTextFields[animGroup.Animations.Length - 1] != null)
-                {
-                    LoadEyeButtons();
-                }
-            }
-
-            if (removeAnimButton.IsClicked)
-            {
-                if (animGroup.Animations.Length - 1 > -1)
-                {
-                    animGroup.RemoveAnimation(animGroup.Animations[animGroup.Animations.Length - 1]);
-                    animGroupTextFields = RemoveTextField(animGroupTextFields);
+                    groupAnimCount = 0;
                     LoadEyeButtons();
                 }
             }
@@ -276,7 +250,7 @@ namespace ProjectCloveAnimator
                     {
                         currentAnimation = animGroup.Animations[i];
 
-                        if (currentAnimation.Frames.Length < 1)
+                        if (currentAnimation.Frames.Length < 1 || currentAnimation.Frames == null)
                         {
                             currentAnimation.AddFrame(new Frame());
                         }
@@ -286,11 +260,6 @@ namespace ProjectCloveAnimator
                 }
             }
             
-            foreach (TextField text in animGroupTextFields)
-            {
-                if (text != null) { text.Update(cursor); }
-            }
-
             foreach (TextField text in textFields)
             {
                 if (text != null) { text.Update(cursor); }
@@ -354,82 +323,10 @@ namespace ProjectCloveAnimator
             }
             else if (textScript.State == TextState.None && textScript.PrevState == TextState.None)
             {
-                // We are not editing the field so the text should be the current frame's script
-                textScript.Text = currentAnimation.CurrentFrame.Script;
-            }
-
-            if (KeyState.IsKeyDown(Keys.NumPad4))
-            {
-                //camera.Position += new Vector2(-4, 0);
-                foreach (Frame frame in currentAnimation.Frames)
+                if (currentAnimation.CurrentFrame != null)
                 {
-                    foreach (Part part in frame.Parts)
-                    {
-                        part.Position += new Vector2(-4, 0);
-                    }
-                }
-            }
-            else if (KeyState.IsKeyDown(Keys.NumPad6))
-            {
-                //camera.Position += new Vector2(4, 0);
-                foreach (Frame frame in currentAnimation.Frames)
-                {
-                    foreach (Part part in frame.Parts)
-                    {
-                        part.Position += new Vector2(4, 0);
-                    }
-                }
-            }
-
-            if (KeyState.IsKeyDown(Keys.NumPad8))
-            {
-                //camera.Position += new Vector2(0, -4);
-                foreach (Frame frame in currentAnimation.Frames)
-                {
-                    foreach (Part part in frame.Parts)
-                    {
-                        part.Position += new Vector2(0, -4);
-                    }
-                }
-            }
-            else if (KeyState.IsKeyDown(Keys.NumPad2))
-            {
-                //camera.Position += new Vector2(0, 4);
-                foreach (Frame frame in currentAnimation.Frames)
-                {
-                    foreach (Part part in frame.Parts)
-                    {
-                        part.Position += new Vector2(0, 4);
-                    }
-                }
-            }
-            if (KeyState.IsKeyDown(Keys.OemPlus) && PrevKeyState.IsKeyUp(Keys.OemPlus)) { camera.Zoom += 0.25f; }
-            if (KeyState.IsKeyDown(Keys.OemMinus) && PrevKeyState.IsKeyUp(Keys.OemMinus)) { camera.Zoom -= 0.25f; }
-            if (KeyState.IsKeyDown(Keys.Q) && PrevKeyState.IsKeyUp(Keys.Q)) { animGroup.CurrentAnimation.DrawBounds = !animGroup.CurrentAnimation.DrawBounds; }
-            if (KeyState.IsKeyDown(Keys.W) && PrevKeyState.IsKeyUp(Keys.W))
-            {
-                Animation newAnim = new Animation(pixelTexture);
-                newAnim.Bounds = new Rectangle(animGroup.CurrentAnimation.Bounds.X, animGroup.CurrentAnimation.Bounds.Y, animGroup.CurrentAnimation.Bounds.Width, animGroup.CurrentAnimation.Bounds.Height);
-                foreach (Frame frame in animGroup.CurrentAnimation.Frames)
-                {
-                    newAnim.AddFrame(new Frame(frame, true, newAnim.Bounds.Center));
-                }
-                animGroup.AddAnimation(newAnim);
-                animGroupTextFields = AddNewTextField(animGroupTextFields, new Vector2(36, 152 + ((consolas.LineSpacing + 2) * animGroup.Animations.Length)));
-                if (animGroupTextFields[animGroup.Animations.Length - 1] != null)
-                {
-                    LoadEyeButtons();
-                }
-            }
-
-            for (int i = 0; i < animGroup.Animations.Length; i++)
-            {
-                if (animGroupTextFields[i] != null)
-                {
-                    if (animGroupTextFields[i].State == TextState.Edit && animGroupTextFields[i].PrevState == TextState.None)
-                    {
-                        animGroup.Animations[i].AnimationName = animGroupTextFields[i].Text;
-                    }
+                    // We are not editing the field so the text should be the current frame's script
+                    textScript.Text = currentAnimation.CurrentFrame.Script;
                 }
             }
             if (KeyState != null) { PrevKeyState = KeyState; }
@@ -530,58 +427,23 @@ namespace ProjectCloveAnimator
             currentFrame = animGroup.CurrentAnimation.CurrentFrame;
             currentAnimation.CurrentFrameIndex = 0;
 
-            animGroupTextFields = new TextField[animGroup.Animations.Length];
+            animGroup.NameFields = new TextField[animGroup.Animations.Length];
             Vector2 animGroupTextPos = new Vector2(16, 128);
 
-            animGroupTextFields = new TextField[0];
+            animGroup.NameFields = new TextField[0];
+            animGroup.TextFont = consolas;
+            animGroup.LabelFont = leelawadee;
 
             for (int i = 0; i < animGroup.Animations.Length; i++)
             {
                 Vector2 textPosition = new Vector2(animGroupTextPos.X + 20, 152 + ((consolas.LineSpacing + 2) * (i + 1)));
-                animGroupTextFields = AddNewTextField(animGroupTextFields, textPosition);
+                animGroup.AddNewTextField(textPosition, animGroup.Animations[i].AnimationName);
             }
             for (int i = 0; i < animGroup.Animations.Length; i++)
             {
-                animGroupTextFields[i].Text = animGroup.Animations[i].AnimationName;
+                animGroup.NameFields[i].Text = animGroup.Animations[i].AnimationName;
             }
             LoadEyeButtons();
-        }
-
-        TextField[] AddNewTextField(TextField[] textFields, Vector2 textPosition)
-        {
-            TextField[] newTextFields;
-            TextField newTextField = new TextField(consolas, textPosition, "", 12, pixelTexture);
-            if (textFields != null)
-            {
-                newTextFields = new TextField[textFields.Length + 1];
-                for (int i = 0; i < textFields.Length; i++)
-                {
-                    newTextFields[i] = textFields[i];
-                }
-            }
-            else
-            {
-                newTextFields = new TextField[1];
-            }
-            newTextFields[newTextFields.Length - 1] = newTextField;
-            return newTextFields;
-        }
-
-        TextField[] RemoveTextField(TextField[] textFields)
-        {
-            if (textFields.Length - 1 > -1)
-            {
-                TextField[] newTextFields = new TextField[textFields.Length - 1];
-                for (int i = 0; i < newTextFields.Length; i++)
-                {
-                    newTextFields[i] = textFields[i];
-                }
-                return newTextFields;
-            }
-            else
-            {
-                return textFields;
-            }
         }
 
         /// <summary>
@@ -615,7 +477,7 @@ namespace ProjectCloveAnimator
 
             textAnimGroupName.Draw(spriteBatch);
 
-            foreach (TextField text in animGroupTextFields)
+            foreach (TextField text in animGroup.NameFields)
             {
                 if (text != null) { text.Draw(spriteBatch); }
             }
