@@ -65,7 +65,7 @@
     <Compile Include="Code\Controls\Button.cs" />
     <Compile Include="Code\Controls\ToolTip.cs" />
     <Compile Include="Code\Utility\Camera2D.cs" />
-    <Compile Include="Code\Utility\Label.cs" />
+    <Compile Include="Code\Controls\Label.cs" />
     <Compile Include="Code\Utility\Cursor.cs" />
     <Compile Include="Code\Animation\Frame.cs" />
     <Compile Include="Code\Utility\Game1.cs" />

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PipelineBuildEvent xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <SourceFile>D:/GameDev/.NET Projects/ProjectClove/ProjectSkelAnimator/Content/gfx/transparency.png</SourceFile>
+  <SourceFile>D:/GameDev/dotNET_Projects/ProjectClove/ProjectSkelAnimator/Content/gfx/transparency.png</SourceFile>
   <SourceTime>2017-08-06T14:23:03.9748901-04:00</SourceTime>
-  <DestFile>D:/GameDev/.NET Projects/ProjectClove/ProjectSkelAnimator/Content/bin/DesktopGL/gfx/transparency.xnb</DestFile>
-  <DestTime>2017-11-16T20:45:31.4328694-05:00</DestTime>
+  <DestFile>D:/GameDev/dotNET_Projects/ProjectClove/ProjectSkelAnimator/Content/bin/DesktopGL/gfx/transparency.xnb</DestFile>
+  <DestTime>2018-01-07T13:51:19.9299806-05:00</DestTime>
   <Importer>TextureImporter</Importer>
   <ImporterTime>2017-03-01T10:05:36-05:00</ImporterTime>
   <Processor>TextureProcessor</Processor>

@@ -15,6 +15,7 @@ namespace ProjectCloveAnimator
         SpriteBatch spriteBatch;
         InputManager input;
         Camera2D camera;
+        Matrix camTransform;
         SpriteFont consolas, leelawadee;
         Texture2D[] partTextures;
         Texture2D cursorTexture, transparentTexture, pixelTexture;
@@ -29,19 +30,24 @@ namespace ProjectCloveAnimator
         TweenButton tweenButton;
         AnimationGroup animGroup;
         Animation currentAnimation;
-        TextField[] textFields, animGroupTextFields;
+        TextField[] textFields;
         TextField textBoundsX, textBoundsY, textBoundsWidth, textBoundsHeight, textTweenFrames, textAnimGroupName, textScript;
         KeyboardState KeyState, PrevKeyState;
         string frameName = "Frame: ";
         string frameTicks = "Ticks: ";
         bool isOnionSkin = false;
         int groupAnimCount = 0;
+        Label mouseCoords;
+
 
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
-            Content.RootDirectory = "Content";
+            graphics.PreferredBackBufferWidth = 1200;
+            graphics.PreferredBackBufferHeight = 720;
+            graphics.ApplyChanges();
             Window.IsBorderless = true;
+            Content.RootDirectory = "Content";
         }
 
         /// <summary>
@@ -54,11 +60,6 @@ namespace ProjectCloveAnimator
         {
 
             base.Initialize();
-            //Console.WriteLine(graphics.GraphicsDevice.DisplayMode.Width);
-            //Console.WriteLine(graphics.GraphicsDevice.DisplayMode.Height);
-            //graphics.PreferredBackBufferWidth = 1200;
-            //graphics.PreferredBackBufferHeight = 720;
-            //graphics.ApplyChanges();
         }
 
         /// <summary>
@@ -69,8 +70,7 @@ namespace ProjectCloveAnimator
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-            camera = new Camera2D();
-            camera.Position = new Vector2(400, 240);
+            camera = new Camera2D(GraphicsDevice);
             camera.Zoom = 1.0f;
 
             partTextures = new Texture2D[32];
@@ -149,6 +149,7 @@ namespace ProjectCloveAnimator
             textFields[5] = textScript = new TextField(consolas, leelawadee, new Vector2(GraphicsDevice.Viewport.Width / 2 + 128, 32), currentFrame.Script, "Script:", 120, pixelTexture);
 
             groupAnimCount = animGroup.Animations.Length;
+            mouseCoords = new Label(leelawadee, "Mouse Coords: " + cursor.MouseState.X + ", " + cursor.MouseState.Y, new Vector2((graphics.GraphicsDevice.Viewport.Width - 16) - (leelawadee.MeasureString("Mouse Coords: 0000, 0000").X), GraphicsDevice.Viewport.Height - (partsPalette.GridSize + 16)) ,Color.White);
         }
 
         void LoadEyeButtons()
@@ -202,6 +203,7 @@ namespace ProjectCloveAnimator
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+            camTransform = camera.Get_Transformation();
             KeyState = Keyboard.GetState();
             animGroup.Update(cursor);
             currentAnimation = animGroup.CurrentAnimation;
@@ -214,6 +216,7 @@ namespace ProjectCloveAnimator
             partsPalette.Update(cursor);
             if (currentFrame != null) { currentFrame.Update(cursor); }
             currentAnimation.Update(cursor);
+            mouseCoords.Text = "Mouse Coords: " + cursor.MouseState.X + ", " + cursor.MouseState.Y;
 
             if (onionSkinButton.IsClicked) { isOnionSkin = !isOnionSkin; }
             if (tweenButton.IsClicked) { tweenButton.TweenCount = Int32.Parse(textTweenFrames.Text); }
@@ -454,7 +457,7 @@ namespace ProjectCloveAnimator
         {
             GraphicsDevice.Clear(Color.LightSlateGray);
             //spriteBatch.Begin();
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, null, null, null, camera.Get_Transformation(GraphicsDevice));
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, null, null, null, camTransform);
 
 
             partsPalette.Draw(spriteBatch);
@@ -488,6 +491,8 @@ namespace ProjectCloveAnimator
             }
             buttonPanel.Draw(spriteBatch);
             eyeButtonPanel.Draw(spriteBatch);
+
+            mouseCoords.Draw(spriteBatch);
 
             cursor.Draw(spriteBatch); // cursor should be drawn after everything else.
 

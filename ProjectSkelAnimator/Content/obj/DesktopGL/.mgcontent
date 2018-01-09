@@ -4,11 +4,11 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>D:/GameDev/.NET Projects/ProjectClove/ProjectSkelAnimator/Content/gfx/cursors.png</File>
-    <File>D:/GameDev/.NET Projects/ProjectClove/ProjectSkelAnimator/Content/gfx/transparency.png</File>
-    <File>D:/GameDev/.NET Projects/ProjectClove/ProjectSkelAnimator/Content/consolas.spritefont</File>
-    <File>D:/GameDev/.NET Projects/ProjectClove/ProjectSkelAnimator/Content/data/File.xml</File>
-    <File>D:/GameDev/.NET Projects/ProjectClove/ProjectSkelAnimator/Content/gfx/tex0.png</File>
-    <File>D:/GameDev/.NET Projects/ProjectClove/ProjectSkelAnimator/Content/leelawadee.spritefont</File>
+    <File>D:/GameDev/dotNET_Projects/ProjectClove/ProjectSkelAnimator/Content/gfx/cursors.png</File>
+    <File>D:/GameDev/dotNET_Projects/ProjectClove/ProjectSkelAnimator/Content/gfx/transparency.png</File>
+    <File>D:/GameDev/dotNET_Projects/ProjectClove/ProjectSkelAnimator/Content/consolas.spritefont</File>
+    <File>D:/GameDev/dotNET_Projects/ProjectClove/ProjectSkelAnimator/Content/data/File.xml</File>
+    <File>D:/GameDev/dotNET_Projects/ProjectClove/ProjectSkelAnimator/Content/gfx/tex0.png</File>
+    <File>D:/GameDev/dotNET_Projects/ProjectClove/ProjectSkelAnimator/Content/leelawadee.spritefont</File>
   </SourceFiles>
 </SourceFileCollection>
