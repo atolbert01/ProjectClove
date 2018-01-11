@@ -13,6 +13,7 @@ namespace ProjectCloveAnimator
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        SpriteBatch spriteBatchUI;
         InputManager input;
         Camera2D camera;
         Matrix camTransform;
@@ -38,13 +39,12 @@ namespace ProjectCloveAnimator
         bool isOnionSkin = false;
         int groupAnimCount = 0;
         Label mouseCoords;
-
-
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             graphics.PreferredBackBufferWidth = 1200;
             graphics.PreferredBackBufferHeight = 720;
+            //graphics.IsFullScreen = true;
             graphics.ApplyChanges();
             Window.IsBorderless = true;
             Content.RootDirectory = "Content";
@@ -70,6 +70,7 @@ namespace ProjectCloveAnimator
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
+            spriteBatchUI = new SpriteBatch(GraphicsDevice);
             camera = new Camera2D(GraphicsDevice);
             camera.Zoom = 1.0f;
 
@@ -209,7 +210,7 @@ namespace ProjectCloveAnimator
             currentAnimation = animGroup.CurrentAnimation;
             currentFrame = currentAnimation.CurrentFrame;
             cursor.Frame = currentFrame;
-            cursor.Update();
+            cursor.Update(camera.Transform);
             buttonPanel.Update(cursor, animGroup);
             eyeButtonPanel.Update(cursor, animGroup);
             input.Update(cursor, animGroup, camera);
@@ -456,11 +457,17 @@ namespace ProjectCloveAnimator
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.LightSlateGray);
-            //spriteBatch.Begin();
+
+            ///////////////////////////////////////////
+            ///                                     ///
+            ///     FIRST SPRITEBATCH DRAW CALL     ///
+            ///                                     ///
+            ///////////////////////////////////////////
+            
+            // This call is for the Animation itself
+
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearClamp, null, null, null, camTransform);
-
-
-            partsPalette.Draw(spriteBatch);
+            base.Draw(gameTime);
             if (isOnionSkin)
             {
                 if (currentAnimation.CurrentFrameIndex - 1 > -1)
@@ -470,8 +477,20 @@ namespace ProjectCloveAnimator
             }
             if (currentFrame != null) { currentFrame.Draw(spriteBatch); }
             currentAnimation.Draw(spriteBatch);
+            spriteBatch.End();
 
-            spriteBatch.DrawString(consolas, frameName + currentAnimation.CurrentFrameIndex, new Vector2(16,48), Color.White);
+            ///////////////////////////////////////////
+            ///                                     ///
+            ///     SECOND SPRITEBATCH DRAW CALL    ///
+            ///                                     ///
+            ///////////////////////////////////////////
+
+            // This call is for the UI elements and things we don't need to apply a camera transform Matrix to
+
+            spriteBatch.Begin();
+            partsPalette.Draw(spriteBatch);
+
+            spriteBatch.DrawString(consolas, frameName + currentAnimation.CurrentFrameIndex, new Vector2(16, 48), Color.White);
             if (currentFrame != null) { spriteBatch.DrawString(consolas, frameTicks + currentFrame.Ticks, new Vector2(16, 64), Color.White); }
 
             if (currentFrame != null)
@@ -493,10 +512,7 @@ namespace ProjectCloveAnimator
             eyeButtonPanel.Draw(spriteBatch);
 
             mouseCoords.Draw(spriteBatch);
-
             cursor.Draw(spriteBatch); // cursor should be drawn after everything else.
-
-            base.Draw(gameTime);
             spriteBatch.End();
         }
     }

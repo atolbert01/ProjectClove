@@ -25,6 +25,7 @@ namespace ProjectCloveAnimator
             AnimGroup = animGroup;
             Camera = camera;
             currentAnimation = animGroup.CurrentAnimation;
+
             if (cursor.State != CursorState.TextEdit)
             {
                 if (KeyState.IsKeyDown(Keys.NumPad4))

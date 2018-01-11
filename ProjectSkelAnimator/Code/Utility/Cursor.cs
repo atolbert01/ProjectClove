@@ -26,46 +26,46 @@ namespace ProjectCloveAnimator
         public SourceRectangleInfo[] SourceRectangles { get; set; }
         public ToolTip Tip { get; set; }
         public int IDCount = 0;
-        Texture2D cursorTexture;
+        public Texture2D CursorTexture;
+        public Vector2 Position { get; set; }
         GraphicsDeviceManager graphics;
         SpriteFont consolas;
 
         int gridSize = 16;
-        int startBoundsX, startBoundsY, prevBoundsX, prevBoundsY, prevBoundsWidth, prevBoundsHeight, boundsX, boundsY, boundsWidth, boundsHeight;
+        int startBoundsX, startBoundsY, prevBoundsX, prevBoundsY, boundsX, boundsY, boundsWidth, boundsHeight;
 
         bool partAdded = true;
-        bool showHelp = false;
-
-        string helpTextPrompt = "[ Tab = Show/Hide Help ]";
-        string helpText = "A = Arrow | D = Draw | E = Erase | F = Transpose | R = Rotate";
-        string helpText2 = "Left = Select Previous Part | Right = Select Next Part | Up = Increase Draw Order | Down = Decrease Draw Order";
-
         public Cursor(Texture2D cursorTexture, GraphicsDeviceManager graphics, Frame frame, SpriteFont consolas, Texture2D pixelTex)
         {
-            this.cursorTexture = cursorTexture;
+            this.CursorTexture = cursorTexture;
             this.graphics = graphics;
             this.consolas = consolas;
             ShowToolTip = false;
             Tip = new ToolTip(pixelTex, "", consolas);
             Frame = frame;
             IsOutOfBounds = false;
+            Position = Vector2.Zero;
         }
 
         public void Load()
         {
-            SourceRectangles = base.SliceSourceRectangles(cursorTexture, gridSize);
+            SourceRectangles = base.SliceSourceRectangles(CursorTexture, gridSize);
         }
 
-        public void Update()
+        public void Update(Matrix transform)
         {
             //if (KeyState != null) { PrevKeyState = KeyState; }
             if (MouseState != null) { PrevMouseState = MouseState; }
             if (boundsX != 0) { prevBoundsX = boundsX; }
             if (boundsY != 0) { prevBoundsY = boundsY; }
-            
+
             MouseState = Mouse.GetState();
             KeyState = Keyboard.GetState();
-            DestRect = new Rectangle(MouseState.X, MouseState.Y, 1, 1);
+            //Position = new Vector2(MouseState.X, MouseState.Y);
+
+            Position = Vector2.Transform(new Vector2(MouseState.X, MouseState.Y), transform);
+
+            DestRect = new Rectangle((int)Position.X, (int)Position.Y, 1, 1);
 
             Tip.Update(new Vector2(MouseState.X + SourceRectangles[(int)State].SourceRect.Width, MouseState.Y + SourceRectangles[(int)State].SourceRect.Height));
 
@@ -112,8 +112,6 @@ namespace ProjectCloveAnimator
 
             if (MouseState.ScrollWheelValue < PrevMouseState.ScrollWheelValue) { SelectedPart = Frame.NextPart(); }
             if (MouseState.ScrollWheelValue > PrevMouseState.ScrollWheelValue) { SelectedPart = Frame.PreviousPart(); }
-
-            if (KeyState.IsKeyDown(Keys.Tab) && PrevKeyState.IsKeyUp(Keys.Tab)) { showHelp = !showHelp; }
 
             if (KeyState.IsKeyDown(Keys.X) && PrevKeyState.IsKeyUp(Keys.X)) { SelectedPart.IsFlipped = !SelectedPart.IsFlipped; }
 
@@ -267,7 +265,7 @@ namespace ProjectCloveAnimator
             }
             else
             {
-                if(Text.Length + 1 <= EditingField.MaxChars)
+                if (Text.Length + 1 <= EditingField.MaxChars)
                 {
                     Text = (Text + (char)key).ToLower();
                 }
@@ -280,20 +278,13 @@ namespace ProjectCloveAnimator
             {
                 if (State == CursorState.Rotate)
                 {
-                    spriteBatch.Draw(cursorTexture, SelectedPart.WorldOrigin, SourceRectangles[3].SourceRect, Color.White);
+                    spriteBatch.Draw(CursorTexture, SelectedPart.WorldOrigin, SourceRectangles[3].SourceRect, Color.White);
                 }
             }
 
-            if (showHelp)
-            {
-                spriteBatch.DrawString(consolas, helpTextPrompt, new Vector2(graphics.GraphicsDevice.Viewport.Width / 2, 368), Color.White, 0, consolas.MeasureString(helpTextPrompt) / 2, 1.0f, SpriteEffects.None, 0);
-                spriteBatch.DrawString(consolas, helpText, new Vector2(graphics.GraphicsDevice.Viewport.Width / 2, 388), Color.White, 0, consolas.MeasureString(helpText) / 2, 1.0f, SpriteEffects.None, 0);
-                spriteBatch.DrawString(consolas, helpText2, new Vector2(graphics.GraphicsDevice.Viewport.Width / 2, 408), Color.White, 0, consolas.MeasureString(helpText2) / 2, 1.0f, SpriteEffects.None, 0);
-            }
-
-            // Draw the cursor.
+            //Draw the cursor.
             if (ShowToolTip) { Tip.Draw(spriteBatch); }
-            spriteBatch.Draw(cursorTexture, new Vector2(DestRect.X, DestRect.Y), SourceRectangles[(int)State].SourceRect, Color.White, 0f, new Vector2(0, 0), 1, SpriteEffects.None, 0f);
+            spriteBatch.Draw(CursorTexture, new Vector2(Position.X, Position.Y), SourceRectangles[(int)State].SourceRect, Color.White, 0f, new Vector2(0, 0), 1, SpriteEffects.None, 0f);
         }
     }
 }
