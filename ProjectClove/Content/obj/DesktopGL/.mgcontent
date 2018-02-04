@@ -4,11 +4,7 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>D:/GameDev/.NET Projects/ProjectClove/ProjectClove/Content/gfx/texPrototype.png</File>
-    <File>D:/GameDev/.NET Projects/ProjectClove/ProjectClove/Content/gfx/man1.png</File>
-    <File>D:/GameDev/.NET Projects/ProjectClove/ProjectClove/Content/clovetype.spritefont</File>
-    <File>D:/GameDev/.NET Projects/ProjectClove/ProjectClove/Content/gfx/uieditor.png</File>
-    <File>D:/GameDev/.NET Projects/ProjectClove/ProjectClove/Content/gfx/terrain.png</File>
-    <File>D:/GameDev/.NET Projects/ProjectClove/ProjectClove/Content/gfx/cursor.png</File>
+    <File>D:/GameDev/dotNET_Projects/ProjectClove/ProjectClove/Content/gfx/transparency.png</File>
+    <File>D:/GameDev/dotNET_Projects/ProjectClove/ProjectClove/Content/gfx/editorCursors.png</File>
   </SourceFiles>
 </SourceFileCollection>

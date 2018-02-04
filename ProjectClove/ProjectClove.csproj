@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{B1894B91-5D32-48F1-910F-FB5B65585E6E}</ProjectGuid>
+    <ProjectGuid>{4997E5AB-C1DE-49A3-8DC7-AFF56333B49A}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ProjectClove</RootNamespace>
@@ -41,53 +41,22 @@
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
-    <DebugSymbols>true</DebugSymbols>
-    <OutputPath>bin\x86\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;LINUX</DefineConstants>
-    <DebugType>full</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
-    <OutputPath>bin\x86\Release\</OutputPath>
-    <DefineConstants>TRACE;LINUX</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-  </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Code\Editor\EditorUI.cs" />
-    <Compile Include="Code\Editor\Label.cs" />
-    <Compile Include="Code\Editor\UIButton.cs" />
-    <Compile Include="Code\Editor\UITextBox.cs" />
-    <Compile Include="Code\Game Objects\GameActor.cs" />
-    <Compile Include="Code\Animation\Animation.cs" />
-    <Compile Include="Code\Animation\Frame.cs" />
-    <Compile Include="Code\Game Objects\Terrain.cs" />
-    <Compile Include="Code\Utils\Camera2D.cs" />
-    <Compile Include="Code\Utils\Game1.cs" />
-    <Compile Include="Code\Utils\InputManager.cs" />
-    <Compile Include="Code\Editor\ObjectPanel.cs" />
-    <Compile Include="Code\Editor\TerrainPanel.cs" />
-    <Compile Include="Code\Utils\TestLogEntry.cs" />
-    <Compile Include="Code\World\Layer.cs" />
-    <Compile Include="Code\World\Level.cs" />
-    <Compile Include="Code\Game Objects\Player.cs" />
-    <Compile Include="Code\Game Objects\Sprite.cs" />
-    <Compile Include="Code\Utils\Program.cs" />
+    <Compile Include="Code\UI\Cursor.cs" />
+    <Compile Include="Code\UI\HorizontalPanelBorder.cs" />
+    <Compile Include="Code\UI\TexturePanel.cs" />
+    <Compile Include="Code\Utility\ArrayList.cs" />
+    <Compile Include="Code\World\Game1.cs" />
+    <Compile Include="Code\Utility\Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Code\World\Room.cs" />
-    <Compile Include="Code\Editor\UtilityPanel.cs" />
+    <Compile Include="Code\Animation\TextureAtlas.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\DesktopGL\MonoGame.Framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />
