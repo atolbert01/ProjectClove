@@ -42,12 +42,15 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Code\Editor.cs" />
     <Compile Include="Code\UI\Cursor.cs" />
     <Compile Include="Code\UI\HorizontalPanelBorder.cs" />
     <Compile Include="Code\UI\TexturePanel.cs" />
+    <Compile Include="Code\UI\UIControl.cs" />
     <Compile Include="Code\Utility\ArrayList.cs" />
     <Compile Include="Code\World\Game1.cs" />
     <Compile Include="Code\Utility\Program.cs" />
+    <Compile Include="Code\Interfaces\IGrabbableUI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Code\Animation\TextureAtlas.cs" />
   </ItemGroup>

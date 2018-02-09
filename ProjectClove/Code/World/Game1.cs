@@ -14,6 +14,7 @@ namespace ProjectClove
         Texture2D pixelTexture, transparencyTexture, editorCursorTexture;
         TexturePanel texturePanel;
         Cursor editorCursor;
+        Editor editor;
         
         public Game1()
         {
@@ -49,8 +50,9 @@ namespace ProjectClove
             pixelTexture.SetData(new Color[] { Color.White });
             transparencyTexture = Content.Load <Texture2D> ("gfx/transparency");
             editorCursorTexture = Content.Load<Texture2D>("gfx/editorCursors");
-            texturePanel = new TexturePanel(transparencyTexture, pixelTexture, new Rectangle(0, graphics.GraphicsDevice.Viewport.Height - 192, graphics.GraphicsDevice.Viewport.Width, 192));
             editorCursor = new Cursor(new TextureAtlas(editorCursorTexture));
+            texturePanel = new TexturePanel(transparencyTexture, pixelTexture, new Rectangle(0, graphics.GraphicsDevice.Viewport.Height - 192, graphics.GraphicsDevice.Viewport.Width, 192), editorCursor, graphics.GraphicsDevice.Viewport.Height);
+            editor = new Editor(texturePanel, editorCursor);
         }
 
         /// <summary>
@@ -71,8 +73,7 @@ namespace ProjectClove
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
-
-            editorCursor.Update();
+            editor.Update();
 
             base.Update(gameTime);
         }
@@ -85,8 +86,7 @@ namespace ProjectClove
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
             spriteBatch.Begin();
-            texturePanel.Draw(spriteBatch);
-            editorCursor.Draw(spriteBatch);
+            editor.Draw(spriteBatch);
             base.Draw(gameTime);
             spriteBatch.End();
         }

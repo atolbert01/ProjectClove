@@ -3,7 +3,14 @@
     class ArrayList<T>
     {
         public T[] Items;
-        public ArrayList(){}
+        public int Count
+        {
+            get { return Items.GetUpperBound(0) + 1; }
+        }
+        public ArrayList()
+        {
+            Items = new T[0];
+        }
 
         public ArrayList(T[] items)
         {

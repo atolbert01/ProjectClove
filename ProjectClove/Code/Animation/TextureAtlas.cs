@@ -5,41 +5,51 @@ namespace ProjectClove
 {
     class TextureAtlas
     {
-        public enum SpriteIndex { }
-        public Texture2D Texture { get; set; }
-        public Rectangle[] SourceRects { get; set; }
+        //public Vector2 Position { get; set; }
+        public int SpriteIndex { get; set; }
+        public int SpriteSize { get; set; }
+        public float Scale { get; set; }
+        public float Rotation { get; set; }
+        private Texture2D texture { get; set; }
+        private Rectangle[] sourceRects { get; set; }
         public TextureAtlas(Texture2D texture)
         {
-            Texture = texture;
-            SourceRects = SliceTexture(Texture);
+            this.texture = texture;
+            sourceRects = SliceTexture(this.texture);
+            Scale = 1.0f;
+            Rotation = 0f;
         }
 
         private Rectangle[] SliceTexture(Texture2D texture)
         {
             Rectangle[] slicedRects = new Rectangle[0];
             int spriteCount = 0;
-            int gridSize = 0;
+            //int gridSize = 0;
             int columns = 0;
             int rows = 0;
 
             // TextureAtlases will only be sliceable by a few predefined dimensions
             if (texture.Bounds.Width % 64 == 0 && texture.Bounds.Height % 64 == 0)
             {
-                gridSize = 64;
+                SpriteSize = 64;
             }
 
-            columns = texture.Bounds.Width / gridSize;
-            rows = texture.Bounds.Height / gridSize;
+            columns = texture.Bounds.Width / SpriteSize;
+            rows = texture.Bounds.Height / SpriteSize;
             slicedRects = new Rectangle[columns * rows];
-            for (int i = 0; i < texture.Bounds.Width / gridSize; i++)
+            for (int i = 0; i < texture.Bounds.Height / SpriteSize; i++)
             {
-                for (int j = 0; j < texture.Bounds.Height / gridSize; j++)
+                for (int j = 0; j < texture.Bounds.Width / SpriteSize; j++)
                 {
-                    slicedRects[spriteCount] = new Rectangle(j * gridSize, i * gridSize, gridSize, gridSize);//new SourceRectangleInfo(tex, new Rectangle(j * gridSize, i * gridSize, gridSize, gridSize));
+                    slicedRects[spriteCount] = new Rectangle(j * SpriteSize, i * SpriteSize, SpriteSize, SpriteSize);//new SourceRectangleInfo(tex, new Rectangle(j * gridSize, i * gridSize, gridSize, gridSize));
                     spriteCount++;
                 }
             }
             return slicedRects;
+        }
+        public void Draw(SpriteBatch spriteBatch, Vector2 position)
+        {
+            spriteBatch.Draw(texture, position, sourceRects[SpriteIndex], Color.White, Rotation, new Vector2(0, 0), Scale, SpriteEffects.None, 0f);
         }
     }
 }
